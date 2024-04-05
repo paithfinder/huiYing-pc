@@ -106,6 +106,7 @@ export default {
         grid: {
           left: '5%',
           right: '5%'
+
         },
         yAxis: {
           type: 'value',

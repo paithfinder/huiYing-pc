@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import WinPage from '@/views/WinPage'
 import ProfitPage from '@/views/ProfitPage'
-
 import DatePage from '@/views/DatePage'
 import FollowPage from '@/views/FollowPage'
 import MapPage from '@/views/MapPage'
@@ -10,13 +9,13 @@ import HomePage from '@/views/HomePage'
 import PreView from '@/views/PreView'
 import NowRate from '@/views/NowRate'
 import NavBar from '@/views/NavBar'
+import NowNews from '@/views/NowNews'
 
 Vue.use(VueRouter)
 const routes = [
-
   {
     path: '/',
-    redirect: '/HomePage' // 当用户访问 / 路径时重定向到 /home
+    redirect: '/PreView' // 当用户访问 / 路径时重定向到 /home
   },
   {
     path: '/NavBar',
@@ -25,6 +24,10 @@ const routes = [
       {
         path: '/NowRate',
         component: NowRate
+      },
+      {
+        path: '/NowNews',
+        component: NowNews
       }
     ]
   },
@@ -60,7 +63,7 @@ const routes = [
   }
 ]
 const router = new VueRouter({
-  routes,
-  mode: 'history'
+  routes
+  // mode: 'history'
 })
 export default router

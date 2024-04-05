@@ -1,8 +1,53 @@
 <template>
   <div class="container">
-    <NavBar></NavBar>
     <div class="view">
-        <div class="left" v-show="unfold">
+      <div class="top">
+        <div class="table">
+          <div class="text">
+            <!-- 左边时间 -->
+            <div class="time">
+              最后更新时间:2024-4-4
+            </div>
+            <!-- 中间标题 -->
+            <h3>外汇实时波动监控</h3>
+            <!-- 右边图标切换 -->
+            <img src="/static/img/rate/切换.png" alt="" class="change">
+          </div>
+          <!-- 表格 -->
+          <table border="1px" width="100%" height="90%" cellspacing="0" color="#55647e" border-color="#d4d6da" style="border-collapse:collapse;  table-layout: fixed;">
+            <thead style="color:#504c57;">
+              <tr >
+                <th>货币</th>
+                <th>1分钟</th>
+                <th>5分钟</th>
+                <th>15分钟</th>
+                <th>30分钟</th>
+                <th>1小时</th>
+                <th>4小时</th>
+                <th>1天</th>
+                <th>1周</th>
+                <th>1个月</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(index) in 8" :key="index" style="text-align: center;">
+                <td><div style="font-weight: bold;">AUDCAD</div><div>澳元</div></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="but">
+          <div class="left" v-show="unfold">
             <div class="top">
                  <el-table
     :data="tableData"
@@ -28,7 +73,7 @@
     </el-table>
             </div>
             <div class="bottom">
-                <el-descriptions title="盘口数据" style="font-size: 10.5px;" >
+                <el-descriptions title="盘口数据" style="font-size: 10px;" >
     <el-descriptions-item label="今开">1.2786</el-descriptions-item>
     <el-descriptions-item label="最高" contentStyle="color:red;">1.2804</el-descriptions-item>
     <el-descriptions-item label="买入价">1.2661</el-descriptions-item>
@@ -72,16 +117,17 @@
             </div>
 
         </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue'
+
 import RateCh from '@/components/RateCh.vue'
 export default {
   components: {
-    NavBar,
+
     RateCh
   },
 
@@ -143,26 +189,66 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container{
+#app{
+  background-color:#eceff7;
+  .container{
     width:100%;
-    height:100%;
+    background-color:#eceff7;
     .view{
     width:100%;
     height:100vh;
-    background-color:#f8f8f8;
-    display:flex;
-    .left{
-        flex:2;
-
+    .top{
+      width:100%;
+      height:95vh;
+      background-color:#eceff7;
+      .table{
+        width:98%;
+        height:90%;
+        background-color:#fff;
+        margin:0 auto;
+        transform:translateY(2%);
         box-sizing: border-box;
+        padding:0.07rem;
+        table{
+          tr:nth-child(odd) {
+  background-color: #edf1f9;
+}
+        }
+        .text{
+          display:flex;
+          justify-content: space-between;
+          align-items: center;
+          width:100%;
+          height:0.2rem;
+          margin-bottom:0.1rem;
 
+          h3{
+            padding:0;
+            margin:0;
+          }
+          img{
+            width:0.15rem;
+            height:0.15rem;
+          }
+
+        }
+
+      }
+    }
+    .but{
+      display:flex;
+      width:100%;
+      height:100vh;
+      background-color:#eceff7;
+       .left{
+        flex:2;
+        box-sizing: border-box;
         .top{
             width:90%;
             height:70%;
             background-color: #fff;
             margin:0 auto;
             border-radius:0.1rem;
-
         }
         .bottom{
             height:20%;
@@ -173,8 +259,8 @@ export default {
             border-radius:0.1rem;
             padding:0.1rem;
             box-sizing:border-box;
+            overflow:hidden;
         }
-
     }
     .right{
         flex:7;
@@ -219,7 +305,7 @@ export default {
             }
             .chartContent{
                 width:100%;
-                height:80vh;
+                height:70vh;
 
             }
 
@@ -227,6 +313,8 @@ export default {
 
     }
 
+    }
+}
 }
 }
 

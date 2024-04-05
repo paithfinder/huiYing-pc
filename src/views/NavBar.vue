@@ -1,7 +1,7 @@
 <template>
 <div class="container">
 
-<NavBar></NavBar>
+<NavBar class="nav"></NavBar>
 </div>
 </template>
 <script>
@@ -16,7 +16,7 @@ export default {
 <style lang='less' scoped>
 .container{
   width:100%;
-  height:0.4rem;
-  background-color: #012760;
+  height:100%;
+
 }
 </style>

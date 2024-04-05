@@ -1,6 +1,7 @@
 <template>
   <div class="box">
-      <div class="head">
+    <div class="top">
+            <div class="head">
         <div class="title">
             汇影镜像交易分析应用平台
     </div>
@@ -15,26 +16,25 @@
   text-color="#fff"
   active-text-color="#ffd04b">
   <el-menu-item index="1">
-      <router-link to="/" style="text-decoration: none;">首页</router-link>
+      <router-link to="/HomePage" style="text-decoration: none;">首页</router-link>
   </el-menu-item>
-  <el-submenu index="2">
-    <template slot="title">实时预测</template>
-    <el-menu-item index="2-1">选项1</el-menu-item>
-    <el-menu-item index="2-2">选项2</el-menu-item>
-    <el-menu-item index="2-3">选项3</el-menu-item>
 
-  </el-submenu>
-  <el-menu-item index="3">
+  <el-menu-item index="2">
     <router-link to="/NowRate" style="text-decoration: none;">实时汇率</router-link>
   </el-menu-item>
-  <el-menu-item index="4">
-    <a href="" style=" text-decoration: none;">实时新闻</a>
+  <el-menu-item index="3">
+  <router-link to="/NowNews" style="text-decoration: none;">实时新闻</router-link>
+  </el-menu-item>
+    <el-menu-item index="4">
+  <router-link to="/NowNews" style="text-decoration: none;">汇百科</router-link>
   </el-menu-item>
       </el-menu>
-
     </div>
     <div class="time">{{ nowTime }}</div>
-<router-view></router-view>
+    </div>
+    <div class="buttom">
+      <router-view></router-view>
+    </div>
 </div>
 </template>
 
@@ -47,6 +47,7 @@ export default {
       activeIndex2: '3'
     }
   },
+
   beforeCreate () {
     this.$store.commit('changeFlag', true)
   },
@@ -89,11 +90,14 @@ export default {
 <style lang="less" scoped>
 .box{
     width: 100%;
-    height: 100%;
+    height:0.4rem;
     box-sizing: border-box;
     position:relative;
-
-    .head{
+    background-color: rgba(1, 51, 95);
+    .top{
+      width:100%;
+      height:0.4rem;
+      .head{
         height:0.4rem;
         width:100%;
         position:absolute;
@@ -135,5 +139,7 @@ export default {
     margin-left:8rem;
     margin-top:0.15rem;
    }
+    }
+
 }
 </style>

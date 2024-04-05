@@ -5,13 +5,12 @@ body,
   height: 100%;
   padding: 0;
   margin: 0;
-  overflow: hidden;
 }
 .page {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: rgba(1, 51, 95, 0.3);
+  background-color: #4a7fc1;
 }
 .wrap {
   width: 100%;

@@ -132,7 +132,6 @@ export default {
       width: 100%;
       height: 100%;
       display: flex;
-      margin-top: 0.4rem;
       position:absolute;
       z-index: 3;
 

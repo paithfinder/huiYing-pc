@@ -140,11 +140,14 @@ export default {
         },
         geo: {
           map: 'world',
+          width: '100%',
+          height: '85%',
           label: {
             emphasis: {
               show: false
             }
           },
+
           roam: false,
           silent: true,
           itemStyle: {
@@ -160,9 +163,12 @@ export default {
         series: [{
           type: 'map',
           mapType: 'world',
-          zoom: 0.8,
+          zoom: 1,
+          width: '100%',
+          height: '85%',
           mapLocation: {
-            y: 45
+            // x: 300,
+            // y: 50
           },
           itemStyle: {
             emphasis: { label: { show: true } }

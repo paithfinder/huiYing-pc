@@ -3,7 +3,7 @@
        <div class="cal">
             <div class="title">
                 <h3>财经日历</h3>
-                  <el-button type="primary" round size="mini">回到今日</el-button>
+                  <el-button type="primary" round size="mini" @click="backNow">回到今日</el-button>
             </div>
             <hr class="hr">
             <div class="select">
@@ -38,17 +38,19 @@
       <el-table-column
         prop="time"
         label="时间"
-        width="180">
+        width="180"
+        align="center">
       </el-table-column>
       <el-table-column
         prop="dataIn"
         label="数据"
-        width="400">
-        <template slot-scope="scope">
-      <div>
+        width="400"
+          align="left">
+              <template slot-scope="scope">
+      <div style="display:flex;align-items: center">
 
         <!-- 图片 -->
-        <img :src="scope.row.imageSrc" alt="图片" style="width: 50px; height: 50px;">
+        <img :src="scope.row.src" alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
               <!-- 数据值 -->
         {{ scope.row.dataIn }}
       </div>
@@ -56,29 +58,33 @@
       </el-table-column>
       <el-table-column
         prop="star"
-        label="重要性">
+        label="重要性"
+          align="center">
              <template slot-scope="scope">
         <div>
-         <img v-for="n in 5" :key="n" :src="n <= scope.row.star ? '/static/img/news/星星/黄.png' : '/static/img/news/星星/灰.png'" alt="星星" style="width: 0.1rem; height: 0.1rem;">
+         <img v-for="n in 5" :key="n" :src="n <= scope.row.star ? `/static/img/news/星星/${scope.row.color}.png` : '/static/img/news/星星/灰.png'" alt="星星" style="width: 0.08rem; height: 0.08rem;padding:0.01rem;">
         </div>
       </template>
       </el-table-column>
             <el-table-column
         prop="qian"
-        label="前值">
+        label="前值"
+          align="center">
       </el-table-column>
             <el-table-column
         prop="pre"
-        label="预测值">
+        label="预测值"
+          align="center">
       </el-table-column>
             <el-table-column
         prop="gongBu"
-        label="公布值">
+        label="公布值"
+          align="center">
       </el-table-column>
     </el-table>
             </div>
        </div>
-       <div class="event">
+       <div class="event" id="b">
         <h3>事件</h3>
         <div class="eventTable">
              <el-table
@@ -87,17 +93,18 @@
       <el-table-column
         prop="time"
         label="时间"
-        width="180">
+        width="180"
+          align="center">
       </el-table-column>
       <el-table-column
         prop="country"
         label="国家"
         width="180">
               <template slot-scope="scope">
-      <div>
+      <div style="display:flex;align-items: center">
 
         <!-- 图片 -->
-        <img :src="scope.row.imageSrc" alt="图片" style="width: 50px; height: 50px;">
+        <img :src="scope.row.src" alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
               <!-- 数据值 -->
         {{ scope.row.country }}
       </div>
@@ -105,10 +112,12 @@
       </el-table-column>
       <el-table-column
         prop="count"
-        label="重要性">
+        label="重要性"
+          align="center"
+          >
           <template slot-scope="scope">
-        <div>
-         <img v-for="n in 5" :key="n" :src="n <= scope.row.count ? '/static/img/news/星星/黄.png' : '/static/img/news/星星/灰.png'" alt="星星" style="width: 0.1rem; height: 0.1rem;">
+        <div >
+         <img v-for="n in 5" :key="n" :src="n <= scope.row.count ? `/static/img/news/星星/${scope.row.color}.png` : '/static/img/news/星星/灰.png'" alt="星星" style="width: 0.08rem; height: 0.08rem;padding:0.01rem;">
         </div>
       </template>
       </el-table-column>
@@ -120,6 +129,12 @@
     </el-table>
         </div>
        </div>
+            <div v-if="chang" class="sidenav" style="z-index:100;position:absolute;">
+        <ul>
+            <li><a href="#" style="text-decoration: none;"><span class="bg"></span><span>经济数据</span></a></li>
+            <li><a href="#b" style="text-decoration: none;"><span class="bg"></span><span>事件数据</span></a></li>
+        </ul>
+    </div>
   </div>
 </template>
 
@@ -130,7 +145,7 @@ export default {
     return {
       value1: false,
       value2: false,
-
+      chang: false,
       // 本周日历信息
       weekList: [
         { id: 1, wkName: '周一', dateName: '03/18' },
@@ -153,6 +168,15 @@ export default {
       baseUrl: 'economyNews/getEconomyNews',
       baseUrl2: 'eventNews/getEventNews'
 
+    }
+  },
+  watch: {
+    ecoTable (newValue) {
+      if (newValue.length > 8) {
+        this.chang = true
+      } else {
+        this.chang = false
+      }
     }
   },
   computed: {
@@ -193,6 +217,7 @@ export default {
   },
 
   methods: {
+
     active (dateName, wkName) {
       this.selectedName = dateName
       const str = [wkName, dateName]
@@ -200,6 +225,10 @@ export default {
       this.eventUrl = str
       this.getEco()
       this.getEvent()
+    },
+    backNow () {
+      this.selectedName = this.$store.getters.date
+      this.active(this.$store.getters.date, this.$store.getters.weekDay)
     },
     pre () {
       if (this.canGoPre && this.viewedWeeks > 0) {
@@ -305,7 +334,10 @@ export default {
       try {
         const res = await axios.get(this.ecoUrl)
         console.log(res.data.data)
-        this.ecoTable = res.data.data
+        if (res.data.data !== null) {
+          console.log(res.data.data)
+          this.ecoTable = res.data.data
+        }
       } catch (error) {
         console.log(error)
       }
@@ -338,7 +370,7 @@ export default {
         height:15vh;
         background-color: white;
         margin:0 auto;
-        margin-top:0.05rem;
+        transform: translateY(5%);
 
         .title{
             width:97%;
@@ -479,5 +511,77 @@ export default {
 .highlighted {
     background-color: #4777f4; /* 设置高亮样式，可以根据需要修改 */
     color:white!important;
+}
+ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+.sidenav {
+    position: relative;
+
+    > ul {
+        background: #92a7ba;
+        position: fixed;
+        top: 2rem;
+        right: 0.05rem;
+        width: 0.375rem; /* 将宽度减半 */
+
+        > li {
+            list-style: none;
+            width: 0.3625rem; /* 将宽度减半 */
+            height: 0.375rem; /* 将高度减半 */
+            cursor: pointer;
+
+            > a {
+                display: block;
+                width: 0.175rem; /* 将宽度减半 */
+                height: 0.2375rem; /* 将高度减半 */
+                font-size: 0.0875rem; /* 根据比例调整字体大小 */
+                padding: 0.0625rem 0.1rem; /* 根据比例调整内边距 */
+                position: relative;
+
+                &::after {
+                    position: absolute;
+                    width: 0.25rem; /* 将下划线宽度减半 */
+                    height: 0.00625rem; /* 根据比例调整下划线高度 */
+                    bottom: 0.00625rem; /* 根据比例调整下划线位置 */
+                    left: 50%;
+                    margin-left: -0.125rem; /* 将下划线宽度减半 */
+                    content: "";
+                    background: linear-gradient(270deg, white, rgb(238, 238, 238), rgb(238, 238, 238), white);;
+                    z-index: 1;
+                }
+
+                > .bg {
+                    position: absolute;
+                    top: -0.00625rem; /* 根据比例调整背景位置 */
+                    bottom: 0.00625rem; /* 根据比例调整背景位置 */
+                    left: 0;
+                    right: 0;
+                    background: transparent;
+                    z-index: 2;
+                }
+
+                &:hover > .bg {
+                    background: #0094ff;
+                }
+
+                > img {
+                    display: block;
+                    width: 0.1125rem; /* 将图像宽度减半 */
+                    height: 0.1rem; /* 将图像高度减半 */
+                    margin: 0 auto;
+                    position: relative;
+                    z-index: 3;
+                }
+
+                > span:last-child {
+                    position: relative;
+                    z-index: 3;
+                }
+            }
+        }
+    }
 }
 </style>

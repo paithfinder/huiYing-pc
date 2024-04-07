@@ -10,7 +10,7 @@ import PreView from '@/views/PreView'
 import NowRate from '@/views/NowRate'
 import NavBar from '@/views/NavBar'
 import NowNews from '@/views/NowNews'
-
+import RateTime from '@/views/RateTime.vue'
 Vue.use(VueRouter)
 const routes = [
   {
@@ -60,6 +60,10 @@ const routes = [
   {
     path: '/MapPage',
     component: MapPage
+  },
+  {
+    path: '/RateTime',
+    component: RateTime
   }
 ]
 const router = new VueRouter({

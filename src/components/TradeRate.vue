@@ -54,7 +54,7 @@ export default {
         ],
         grid: {
           width: '85%',
-          height: '80%',
+          height: '75%',
           top: '5%'
         },
         tooltip: {

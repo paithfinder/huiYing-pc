@@ -44,7 +44,7 @@
 </el-dropdown><span style="color:white;font-size: 0.1rem;color:#00ffff">交易频率</span>
 <span class="time">最近更新时间:2024-04-05 12:04:06</span>
                   <div class="text"></div>
-                  <div class="ku">88.8%</div>
+                  <RotateNum class="ku"></RotateNum>
 
                   <div class="shou">前一时刻出手概率为:<span>56%</span></div>
                 </div>
@@ -94,6 +94,7 @@ import TradeRate from '@/components/TradeRate'
 import MProfit from '@/components/MProfit'
 import WinR from '@/components/WinR'
 import NavBar from '@/components/NavBar.vue'
+import RotateNum from '@/components/RotateNum'
 export default {
   components: {
     WinR,
@@ -102,7 +103,8 @@ export default {
     NumFo,
     TradeRate,
     MProfit,
-    NavBar
+    NavBar,
+    RotateNum
   },
   data () {
     return {
@@ -199,31 +201,28 @@ export default {
 
           }
           .map{
-             background:url(/public/static/img/home/map_k.png) no-repeat center 0 ;
+             background:url(/public/static/img/home/d.png) no-repeat center 0 ;
               background-size: 100% 100%;
+              height:2.1rem;
               .textBox{
                 height:50%;
                 margin-top:0.03rem;
-                  background-color: rgba(109, 161, 218,0.5);
+                  // background-color: rgba(109, 161, 218,0.5);
                 // background-color: red;
                 .el-dropdown-link {
                   cursor: pointer;
                   color: #00ffff;
                   padding-left:0.15rem;
-
                   box-sizing: border-box;
                   }
                 .el-icon-arrow-down {
                   font-size: 0.1rem;
                 }
                 .ku{
-                  font-size:0.5rem;
                   margin:0 auto;
-                  text-align: center;
-                  color:#00ffff;
-                  text-shadow: 1px 1px rgba(111, 162, 218,0.8),1px 1px rgba(111, 162, 218,0.8),2px 2px rgba(111, 162, 218,0.8),3px 3px rgba(111, 162, 218,0.8),4px 4px rgba(111, 162, 218,0.8),5px 5px rgba(111, 162, 218,0.8);
+                  // background-color: #d26460;
+                  height:1rem;
 
-                  animation: float 2s infinite ease-in-out;
                 }
                 .time{
                   margin-left:0.15rem;
@@ -234,6 +233,7 @@ export default {
                   margin-left:0.15rem;
                   font-size:0.1rem;
                   color:#00ffff;
+                  // background-color:#00ffff;
                   span{
                     font-size:0.12rem;
                     color:#d26460;
@@ -285,15 +285,5 @@ export default {
       }
    }
 }
-@keyframes float {
-    0%, 100% {
-      transform: translateY(0);
-        transform: scale(1);
-    }
-    50% {
-      transform: translateY(-3px);
-      // transform: scale(1.1);
-    }
-  }
 
 </style>

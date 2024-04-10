@@ -40,6 +40,11 @@
         label="时间"
         width="180"
         align="center">
+        <template slot-scope="scope">
+      <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
+        {{ scope.row.time }}
+      </div>
+    </template>
       </el-table-column>
       <el-table-column
         prop="dataIn"
@@ -52,7 +57,9 @@
         <!-- 图片 -->
         <img :src="scope.row.src" alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
               <!-- 数据值 -->
-        {{ scope.row.dataIn }}
+             <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
+       {{ scope.row.dataIn }}
+      </div>
       </div>
     </template>
       </el-table-column>
@@ -70,16 +77,31 @@
         prop="qian"
         label="前值"
           align="center">
+          <template slot-scope="scope">
+      <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
+        {{ scope.row.qian }}
+      </div>
+    </template>
       </el-table-column>
             <el-table-column
         prop="pre"
         label="预测值"
           align="center">
+          <template slot-scope="scope">
+      <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
+        {{ scope.row.pre }}
+      </div>
+    </template>
       </el-table-column>
             <el-table-column
         prop="gongBu"
         label="公布值"
           align="center">
+          <template slot-scope="scope">
+      <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
+        {{ scope.row.gongbu }}
+      </div>
+    </template>
       </el-table-column>
     </el-table>
             </div>
@@ -95,6 +117,11 @@
         label="时间"
         width="180"
           align="center">
+          <template slot-scope="scope">
+      <div :style="{ color: scope.row.count >= 3 ? 'red' : '' }">
+        {{ scope.row.time }}
+      </div>
+    </template>
       </el-table-column>
       <el-table-column
         prop="country"
@@ -106,7 +133,10 @@
         <!-- 图片 -->
         <img :src="scope.row.src" alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
               <!-- 数据值 -->
+                    <div :style="{ color: scope.row.count >= 3 ? 'red' : '' }">
         {{ scope.row.country }}
+      </div>
+
       </div>
     </template>
       </el-table-column>
@@ -124,6 +154,11 @@
             <el-table-column
         prop="things"
         label="事件">
+              <template slot-scope="scope">
+      <div :style="{ color: scope.row.count >= 3 ? 'red' : '' }">
+        {{ scope.row.things }}
+      </div>
+    </template>
       </el-table-column>
 
     </el-table>
@@ -131,7 +166,7 @@
        </div>
             <div v-if="chang" class="sidenav" style="z-index:100;position:absolute;">
         <ul>
-            <li><a href="#" style="text-decoration: none;"><span class="bg"></span><span>经济数据</span></a></li>
+            <li><a href="#" style="text-decoration: none;border-bottom: 1px solid #edf1f9;"><span class="bg"></span><span>经济数据</span></a></li>
             <li><a href="#b" style="text-decoration: none;"><span class="bg"></span><span>事件数据</span></a></li>
         </ul>
     </div>
@@ -354,6 +389,7 @@ export default {
         console.log(error)
       }
     }
+
   }
 
 }
@@ -540,18 +576,6 @@ ul, li {
                 font-size: 0.0875rem; /* 根据比例调整字体大小 */
                 padding: 0.0625rem 0.1rem; /* 根据比例调整内边距 */
                 position: relative;
-
-                &::after {
-                    position: absolute;
-                    width: 0.25rem; /* 将下划线宽度减半 */
-                    height: 0.00625rem; /* 根据比例调整下划线高度 */
-                    bottom: 0.00625rem; /* 根据比例调整下划线位置 */
-                    left: 50%;
-                    margin-left: -0.125rem; /* 将下划线宽度减半 */
-                    content: "";
-                    background: linear-gradient(270deg, white, rgb(238, 238, 238), rgb(238, 238, 238), white);;
-                    z-index: 1;
-                }
 
                 > .bg {
                     position: absolute;

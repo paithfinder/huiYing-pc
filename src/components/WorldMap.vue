@@ -39,10 +39,12 @@ export default {
          * 显示点的坐标
          */
       const geoCoordMap = {
-        china: [130.0823, 28.2568],
-        Botswana: [4.895168, 52.370216],
-        Canada: [-130.895168, 70.2312],
-        Brazil: [-50.895168, -20.2312]
+        UK: [-0.1276, 51.5074], // 英国的坐标（经度，纬度）
+        Japan: [139.6503, 35.6762], // 日本的坐标（经度，纬度）
+        USA: [-95.7129, 37.0902], // 美国的坐标（经度，纬度）
+        Switzerland: [8.2275, 46.8182], // 瑞士的坐标（经度，纬度）
+        Canada: [-106.3468, 56.1304], // 加拿大的坐标（经度，纬度）
+        Europe: [10.4515, 51.1657] // 欧洲的坐标（经度，纬度）
       }
       /**
          * 所在点对应数据
@@ -50,18 +52,25 @@ export default {
          */
       const data = [{
         id: 1,
-        name: 'china',
-        value: 10
-      }, {
-        id: 2,
-        name: 'Botswana',
-        value: 28397.812
-      }, {
-        id: 3,
         name: 'Canada'
       }, {
+        id: 2,
+        name: 'USA'
+      }, {
+        id: 3,
+        name: 'UK'
+      },
+      {
         id: 4,
-        name: 'Brazil'
+        name: 'Japan'
+      },
+      {
+        id: 5,
+        name: 'Switzerland'
+      },
+      {
+        id: 6,
+        name: 'Europe'
       }]
       //  生成出线方法
       function formtGCData (geoData, data, srcNam, dest) {
@@ -175,7 +184,14 @@ export default {
           },
           // 对应生成地图颜色板块数据
           data: [
-            { name: 'Afghanistan', value: 28397.812 },
+            { name: 'UK', value: '' },
+            { name: 'Japan', value: '' },
+            { name: 'Canada', value: '' },
+            { name: 'USA', value: '' },
+            { name: 'Switzerland', value: '' },
+            { name: 'Europe', value: '' },
+
+            { name: 'Afghanistan' },
             { name: 'Angola', value: 19549.124 },
             { name: 'Albania', value: 3150.143 },
             { name: 'United Arab Emirates', value: 8441.537 },
@@ -202,8 +218,7 @@ export default {
             { name: 'Bhutan', value: 716.939 },
             { name: 'Botswana', value: 1969.341 },
             { name: 'Central African Republic', value: 4349.921 },
-            { name: 'Canada', value: 34126.24 },
-            { name: 'Switzerland', value: 7830.534 },
+
             { name: 'Chile', value: 17150.76 },
             { name: 'China', value: 1359821.465 },
             { name: 'Ivory Coast', value: 60508.978 },
@@ -232,7 +247,7 @@ export default {
             { name: 'Falkland Islands', value: 49.581 },
             { name: 'France', value: 63230.866 },
             { name: 'Gabon', value: 1556.222 },
-            { name: 'United Kingdom', value: 62066.35 },
+
             { name: 'Georgia', value: 4388.674 },
             { name: 'Ghana', value: 24262.901 },
             { name: 'Guinea', value: 10876.033 },
@@ -258,7 +273,7 @@ export default {
             { name: 'Italy', value: 60508.978 },
             { name: 'Jamaica', value: 2741.485 },
             { name: 'Jordan', value: 6454.554 },
-            { name: 'Japan', value: 127352.833 },
+
             { name: 'Kazakhstan', value: 15921.127 },
             { name: 'Kenya', value: 40909.194 },
             { name: 'Kyrgyzstan', value: 5334.223 },
@@ -342,7 +357,7 @@ export default {
             { name: 'Uganda', value: 33987.213 },
             { name: 'Ukraine', value: 46050.22 },
             { name: 'Uruguay', value: 3371.982 },
-            { name: 'United States of America', value: 312247.116 },
+
             { name: 'Uzbekistan', value: 27769.27 },
             { name: 'Venezuela', value: 236.299 },
             { name: 'Vietnam', value: 89047.397 },
@@ -382,7 +397,7 @@ export default {
               }
             }
           },
-          data: formtGCData(geoCoordMap, data, 'china', true)
+          data: formtGCData(geoCoordMap, data, 'UK', true)
         }, {
           type: 'lines',
           color: '#000',
@@ -403,7 +418,7 @@ export default {
               curveness: 0.2
             }
           },
-          data: formtGCData(geoCoordMap, data, 'china', false)
+          data: formtGCData(geoCoordMap, data, 'UK', false)
         },
         {
           type: 'effectScatter',
@@ -419,8 +434,9 @@ export default {
               show: true,
               position: 'right',
               formatter: '{b}',
-              color: '#fff',
-              fontSize: 15
+              color: '#01335f',
+              fontSize: 14,
+              fontWeight: 'bold'
             }
           },
           symbolSize: 10,
@@ -430,7 +446,7 @@ export default {
               borderColor: 'gold'
             }
           },
-          data: formtVData(geoCoordMap, data, 'china')
+          data: formtVData(geoCoordMap, data, 'UK')
         },
         {
           type: 'effectScatter',

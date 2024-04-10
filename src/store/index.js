@@ -10,7 +10,8 @@ export default new Vuex.Store({
   state () {
     return {
       isEnterIn: true,
-      nowDate: ''
+      nowDate: '',
+      lastTime: ''
 
     }
   },

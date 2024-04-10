@@ -35,16 +35,17 @@
             </thead>
             <tbody>
               <tr v-for="(item,index) in moneyTable" :key="index" style="text-align: center;">
-                <td><div style="font-weight: bold;">{{ item.symbol }}</div><div style="font-size:.08rem;">{{ item.chinese_name }}</div></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ><div style="font-weight: bold;">{{ item.eng }}</div><div style="font-size:.08rem;">{{ item.chinese }}</div></td>
+                <td :class="item.oneMinuteS > 0 ? 'red-cell' : (item.oneMinuteS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.oneMinuteS }}</div><div style="font-size:.08rem;">({{ item.oneMinuteC }})</div></td>
+                <td :class="item.fiveMinuteS>0 ? 'red-cell':(item.fiveMinuteS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.fiveMinuteS }}</div><div style="font-size:.08rem;">({{ item.fiveMinuteC }})</div></td>
+                <td :class="item.fifteenMinuteS>0 ? 'red-cell':(item.fifteenMinuteS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.fifteenMinuteS }}</div><div style="font-size:.08rem;">({{ item.fifteenMinuteC }})</div></td>
+                <td :class="item.thirtyMinuteS>0 ? 'red-cell':(item.thirtyMinuteS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.thirtyMinuteS }}</div><div style="font-size:.08rem;">({{ item.thirtyMinuteC }})</div></td>
+                <td :class="item.oneHourS>0 ? 'red-cell':(item.oneHourS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.oneHourS }}</div><div style="font-size:.08rem;">({{ item.oneHourC }})</div></td>
+                <td :class="item.fourHourS>0 ? 'red-cell':(item.fourHourS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.fourHourS }}</div><div style="font-size:.08rem;">({{ item.fourHourC }})</div></td>
+                                <td :class="item.oneDayS>0 ? 'red-cell':(item.oneDayS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.oneDayS }}</div><div style="font-size:.08rem;">({{ item.oneDayC }})</div></td>
+                <td :class="item.oneWeekS>0 ? 'red-cell':(item.oneWeekS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.oneWeekS }}</div><div style="font-size:.08rem;">({{ item.oneWeekC }})</div></td>
+                <td :class="item.oneMonthS>0 ? 'red-cell':(item.oneMonthS < 0 ? 'green-cell' : '')"><div style="font-weight: bold;">{{ item.oneMonthS }}</div><div style="font-size:.08rem;">({{ item.oneMonthC}})</div></td>
+
               </tr>
             </tbody>
           </table>
@@ -60,11 +61,20 @@
     height="100%"
     border
     highlight-current-row
-    style="width: 100%">
+    style="width: 100%"
+     @row-click="handleRowClick">
     <el-table-column
-      prop="date"
+      prop="symbol"
       label="代码/名称"
       width="120">
+      <template slot-scope="scope">
+      <div style="text-align: center;">
+        {{ scope.row.symbols }}
+      </div>
+      <div style="text-align: center!important">
+        {{ scope.row.chinese }}
+      </div>
+    </template>
     </el-table-column>
     <el-table-column
       prop="name"
@@ -94,11 +104,11 @@
             <div class="chartWrap">
                 <div class="chartHead">
                     <div class="one">
-                        <h3>英镑兑瑞士法郎</h3>
+                        <h3>GBP/CHF </h3>
                         <div>1.266200-0.10124-0.9700%</div>
                     </div>
                     <div class="two">
-                        <span>GBP/CHF </span>
+                        <span>英镑兑瑞士法郎</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -108,12 +118,14 @@
                         <img v-show="unfold" src="/static/img/rate/折叠.png" alt="" @click="left" >
                         <img  v-show="fold" src="/static/img/rate/展开.png" alt="" @click="right" >
                          <div style="margin-left:0.2rem;">
-    <el-radio-group v-model="radio" size="small" >
-      <el-radio-button label="分时" ></el-radio-button>
-      <el-radio-button label="日K"></el-radio-button>
-      <el-radio-button label="周k"></el-radio-button>
-      <el-radio-button label="月k"></el-radio-button>
+
+      <el-radio-group v-model="radio" size="small" >
+      <el-radio-button label="近一周" ></el-radio-button>
+      <el-radio-button label="半个月"></el-radio-button>
+      <el-radio-button label="一个月"></el-radio-button>
+      <el-radio-button label="两个月"></el-radio-button>
     </el-radio-group>
+
   </div>
                     </div>
                 </div>
@@ -128,7 +140,7 @@
     </div>
      <div class="sidenav" style="z-index:100;position:absolute;">
         <ul>
-            <li><a href="#" style="text-decoration: none;"><span class="bg"></span><span>外汇异动</span></a></li>
+            <li style="border-bottom: 1px solid #edf1f9;"><a href="#" style="text-decoration: none;"><span class="bg"></span><span>外汇异动</span></a></li>
             <li><a href="#a" style="text-decoration: none;"><span class="bg"></span><span>细节分析</span></a></li>
         </ul>
     </div>
@@ -136,6 +148,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import WorldMap from '@/components/WorldMap'
 import RateCh from '@/components/RateCh.vue'
 
@@ -148,44 +161,58 @@ export default {
 
   data () {
     return {
+      coinData: [],
+      baseUrl: 'currencyExchangeCharts/getCurrencyExchangeChartsData/',
+      coinUrl: '',
+      defaultParam: '/noTime',
+      selecedSymbol: '',
       tabShow: true,
       radio: '分时',
       unfold: true,
       fold: false,
       tableData: [{
-        date: '英镑兑瑞士法郎',
+        symbols: '0',
+        name: '1.1377',
+        chinese: '阿爸阿爸·',
+        address: '⬆0.3100%'
+      }, {
+        symbols: '1',
+        name: '1.1377',
+        chinese: '阿爸阿爸·',
+        address: '⬆0.3100%'
+      }, {
+        symbols: '2',
+        name: '1.1377',
+        chinese: '阿爸阿爸·',
+        address: '⬆0.3100%'
+      }, {
+        symbols: '3',
+        chinese: '阿爸阿爸·',
         name: '1.1377',
         address: '⬆0.3100%'
       }, {
-        date: '英镑兑瑞士法郎',
+        symbols: '英',
+        chinese: '阿爸阿爸·',
         name: '1.1377',
         address: '⬆0.3100%'
       }, {
-        date: '英镑兑瑞士法郎',
+        symbols: '4',
+        chinese: '阿爸阿爸·',
         name: '1.1377',
         address: '⬆0.3100%'
       }, {
-        date: '英镑兑瑞士法郎',
+        symbols: '5',
+        chinese: '阿爸阿爸·',
         name: '1.1377',
         address: '⬆0.3100%'
       }, {
-        date: '英镑兑瑞士法郎',
+        symbols: '6',
+        chinese: '阿爸阿爸·',
         name: '1.1377',
         address: '⬆0.3100%'
       }, {
-        date: '英镑兑瑞士法郎',
-        name: '1.1377',
-        address: '⬆0.3100%'
-      }, {
-        date: '英镑兑瑞士法郎',
-        name: '1.1377',
-        address: '⬆0.3100%'
-      }, {
-        date: '英镑兑瑞士法郎',
-        name: '1.1377',
-        address: '⬆0.3100%'
-      }, {
-        date: '英镑兑瑞士法郎',
+        symbols: '7',
+        chinese: '阿爸阿爸·',
         name: '1.1377',
         address: '⬆0.3100%'
       }],
@@ -202,6 +229,7 @@ export default {
     }
   },
   methods: {
+
     left () {
       this.unfold = false
       this.fold = true
@@ -212,6 +240,50 @@ export default {
     },
     shift () {
       this.tabShow = !this.tabShow
+    },
+    handleRowClick (row, event, column) {
+      // console.log('我点击了', row.symbols)
+      this.selectedSymbol = row.symbols
+      console.log(this.selectedSymbol)
+    },
+    async getTable () {
+      try {
+        const res = await axios.get('/jinChart/getJinChart')
+        console.log(res.data)
+        if (res.data !== null) {
+          console.log(res.data)
+          this.moneyTable = res.data
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    // async getCoin () {
+    //   try {
+    //     const res = await axios.get('/currencyExchangeForms/getCurrencyExchangeFormsData')
+    //     // console.log(res)
+    //     if (res.data.data !== null) {
+    //       this.coinData = res.data.data
+    //       console.log(this.coinData)
+    //     }
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // }
+  },
+  mounted () {
+    this.getTable()
+    // this.getCoin()
+  },
+  created () {
+    if (!localStorage.getItem('visited')) {
+      localStorage.setItem('visited', 'true')
+      // 用户是第一次访问
+      this.coinUrl = this.baseUrl + this.selectedSymbol + this.defaultSymbol
+      this.getCoin()
+    } else {
+    // 用户不是第一次访问
+      this.coinUrl = this.baseUrl + this.selectedSymbol
     }
   }
 }
@@ -230,6 +302,7 @@ export default {
       width:100%;
       height:95vh;
       background-color:#eceff7;
+      cursor: pointer;
       .table{
         width:98%;
         height:90%;
@@ -303,6 +376,7 @@ export default {
         .chartWrap{
             width:95%;
             margin:0 auto;
+
             .chartHead{
                 .one{
                     display:flex;
@@ -336,7 +410,7 @@ export default {
             }
             .chartContent{
                 width:100%;
-                height:70vh;
+                height:65vh;
 
             }
 
@@ -376,18 +450,6 @@ ul, li {
                 padding: 0.0625rem 0.1rem; /* 根据比例调整内边距 */
                 position: relative;
 
-                &::after {
-                    position: absolute;
-                    width: 0.25rem; /* 将下划线宽度减半 */
-                    height: 0.00625rem; /* 根据比例调整下划线高度 */
-                    bottom: 0.00625rem; /* 根据比例调整下划线位置 */
-                    left: 50%;
-                    margin-left: -0.125rem; /* 将下划线宽度减半 */
-                    content: "";
-                    background: linear-gradient(270deg, white, rgb(238, 238, 238), rgb(238, 238, 238), white);;
-                    z-index: 1;
-                }
-
                 > .bg {
                     position: absolute;
                     top: -0.00625rem; /* 根据比例调整背景位置 */
@@ -422,5 +484,10 @@ ul, li {
 
 }
 }
-
+.red-cell{
+  background-color:#f17f7f
+}
+.green-cell{
+  background-color:#8fc291
+}
 </style>

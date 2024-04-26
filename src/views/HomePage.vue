@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="wrap">
       <video autoplay loop muted poster="static/img/home/homebg.mp4" id="bgmp" >
         <source src="static/img/home/homebg.mp4" type="video/mp4">
     </video>
@@ -8,65 +8,119 @@
       <div class="column">
         <div class="panel date">
             <div class="big">
-              <h2>人物交易频率</h2>
-              <i class="el-icon-full-screen" @click="expand(1)"></i>
+              <h2>近期交易</h2>
+              <el-tooltip class="item" effect="light" content="反映了单个信号源在近几个月的交易情况
+           " placement="right" >
+                   <i class="el-icon-question" style="color:#00bed0;margin-left:-0.16rem;transform:translateX(-0.55rem) scale(1.2);margin-top:0.03rem;"></i>
+            </el-tooltip>
+                    <div class="menu" style="width:0.6rem;height:0.15rem;transform: translateX(-32%);">
+                             <el-dropdown @command="handleRili" style="height:0.1rem;cursor: pointer;width:1rem;text-align: center">
+  <span class="el-dropdown-link" style="font-size:0.08rem;color:aqua">
+    {{ valueRili }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item v-for="item in itemList" :key="item.id" :command="item" style="height:0.2rem;">{{ item.name }}</el-dropdown-item>
+
+  </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+              <!-- <i class="el-icon-full-screen" @click="expand(1)"></i> -->
             </div>
-          <div class="chart">
-            <TraDa></TraDa>
+         <div class="chart">
+            <TraDa :valueRili="valueRili"></TraDa>
 
           </div>
         </div>
            <div class="panel win">
             <div class="big">
-                <h2>人物获胜率</h2>
-                <i class="el-icon-full-screen" @click="expand(2)"></i>
+                <h2>盈利占比</h2>
+                <el-tooltip class="item" effect="light" content="反映了所有信号源盈利交易占总交易的比例" placement="right">
+                   <i class="el-icon-question" style="color:#00bed0;margin-left:-0.2rem;transform: scale(1.2);margin-top:0.02rem;"></i>
+            </el-tooltip>
+                <div class="menu" style="width:0.6rem;height:0.15rem;transform: translateX(30%);">
+                             <el-dropdown @command="handleDate" style="height:0.1rem;">
+  <span class="el-dropdown-link" style="font-size:0.08rem;color:aqua">
+    {{ valueWin }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item v-for="item in date" :key="item.id" :command="item" style="height:0.2rem;">{{ item.value }}</el-dropdown-item>
+
+  </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+                <!-- <i class="el-icon-full-screen" @click="expand(2)"></i> -->
+
             </div>
           <div class="chart">
-            <WinR></WinR>
+            <WinR :valueWin="valueWin"></WinR>
           </div>
         </div>
       </div>
       <div class="column">
            <div class="panel map">
                 <div class="big">
-                  <h2>实时汇率</h2>
-                  <i class="el-icon-full-screen" @click="expand(3)"></i>
+
                 </div>
                 <div class="textBox">
-                  <el-dropdown>
-  <span class="el-dropdown-link">
-    GBPUSD<i class="el-icon-arrow-down el-icon--right"></i>
+
+                  <el-dropdown @command="handleCommand">
+  <span class="el-dropdown-link" style="font-size:0.1rem">
+    {{ selectedValue }}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
   <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item>黄金糕</el-dropdown-item>
-    <el-dropdown-item>狮子头</el-dropdown-item>
-  </el-dropdown-menu>
-</el-dropdown><span style="color:white;font-size: 0.1rem;color:#00ffff">交易频率</span>
-<span class="time">最近更新时间:2024-04-05 12:04:06</span>
-                  <div class="text"></div>
-                  <RotateNum class="ku"></RotateNum>
+    <el-dropdown-item v-for="item in itemList" :key="item.id" :command="item">{{ item.name }}</el-dropdown-item>
 
-                  <div class="shou">前一时刻出手概率为:<span>56%</span></div>
+  </el-dropdown-menu>
+                    </el-dropdown>
+
+                  <span style="color:white;font-size: 0.09rem;font-weight:bold;">出手概率</span>
+                  <el-tooltip class="item" effect="light" content="实时预测信号源此时刻会出手(交易)的概率" placement="right">
+                   <i class="el-icon-question" style="color:#00bed0;transform: scale(1);transform:translate(20%,10%)"></i>
+            </el-tooltip>
+                  <div class="time" style="margin:0;width:1.2rem;transform: translate(2.4rem,-0.11rem);">最近更新时间:{{ gengxin }}</div>
+
+                  <div class="ku">{{ pinlv }}%</div>
+                  <div id="expand">
+                    <!-- <i class="el-icon-full-screen" @click="expand(3)"></i> -->
+                  </div>
                 </div>
                 <div class="chart">
-            <TradeRate></TradeRate>
+            <TradeRate :selectedValue="selectedValue" :gengxin="gengxin" :pinlv="pinlv" @gengpin="handleChild"></TradeRate>
+
           </div>
+            <div style="width:100%;height:0.09rem;text-align: center;"><span style="color:#fff;font-size:0.08rem;">先前预测概率</span></div>
         </div>
            <div class="panel pro">
               <div class="big">
-                  <h2>人物盈利率</h2>
-                  <i class="el-icon-full-screen" @click="expand(4)"></i>
+                  <h2>盈亏情况</h2>
+                   <el-tooltip class="item" effect="light" content="反映了所有信号源在每个月的盈利金额，亏损金额" placement="right">
+                   <i class="el-icon-question" style="color:#00bed0;margin-left:-0.1rem;transform: scale(1);transform:translate(-0.95rem,80%)"></i>
+            </el-tooltip>
+                           <div class="menu" style="width:0.6rem;height:0.15rem;transform: translateX(30%);">
+                    <el-dropdown @command="handleYear" style="margin-top:0.04rem;height:0.08rem;cursor:pointer">
+  <span class="el-dropdown-link" style="font-size:0.09rem;color:aqua">
+    {{ selectedYear }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item v-for="item in yearList" :key="item.id" :command="item" style="height:0.2rem;">{{ item.value }}</el-dropdown-item>
+
+  </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+                  <!-- <i class="el-icon-full-screen" @click="expand(4)"></i> -->
               </div>
           <div class="chart">
-            <MProfit></MProfit>
+            <MProfit :valuePro="selectedYear"></MProfit>
           </div>
         </div>
       </div>
       <div class="column">
            <div class="panel per">
               <div class="big">
-                  <h2>人物描述</h2>
-
+                  <h2>个人风格</h2>
+                     <el-tooltip class="item" effect="light" content="反映了用户的潜在交易风格，并推荐适合用户的信号源" placement="right">
+                   <i class="el-icon-question" style="color:#00bed0;transform: scale(1.2);transform:translate(0.65rem,-0.13rem)"></i>
+            </el-tooltip>
               </div>
           <div class="chart">
             <PerAn></PerAn>
@@ -74,11 +128,25 @@
         </div>
            <div class="panel num">
               <div class="big">
-                  <h2>跟随人数</h2>
-                  <i class="el-icon-full-screen" @click="expand(5)"></i>
+                  <h2>综合评价</h2>
+                    <el-tooltip class="item" effect="light" content="按照多个维度综合评价信号源的风格类型" placement="right">
+                   <i class="el-icon-question" style="color:#00bed0;transform: scale(1.2);transform:translate(-0.41rem,0.01rem)"></i>
+            </el-tooltip>
+                                <div class="menu"  style="width:1rem;height:0.15rem;transform:translateX(20%)">
+                    <el-dropdown @command="handleFollow" style="cursor:pointer;height:0.1rem;text-align: center;width:1rem;">
+  <span class="el-dropdown-link" style="font-size:0.09rem;color:aqua">
+    {{ selectedFollow }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item v-for="item in itemList" :key="item.id" :command="item" style="height:0.17rem;">{{ item.name }}</el-dropdown-item>
+
+  </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+                  <!-- <i class="el-icon-full-screen" @click="expand(5)"></i> -->
               </div>
           <div class="chart">
-            <NumFo></NumFo>
+            <NumFo :selectedFollow="selectedFollow"></NumFo>
           </div>
         </div>
       </div>
@@ -87,6 +155,7 @@
 </template>
 
 <script>
+
 import PerAn from '@/components/PerAn'
 import TraDa from '@/components/TraDa'
 import NumFo from '@/components/NumFo'
@@ -94,7 +163,7 @@ import TradeRate from '@/components/TradeRate'
 import MProfit from '@/components/MProfit'
 import WinR from '@/components/WinR'
 import NavBar from '@/components/NavBar.vue'
-import RotateNum from '@/components/RotateNum'
+
 export default {
   components: {
     WinR,
@@ -103,20 +172,71 @@ export default {
     NumFo,
     TradeRate,
     MProfit,
-    NavBar,
-    RotateNum
+    NavBar
+
   },
   data () {
     return {
       myShow: false,
+      winData: '',
+      valueWin: '近一周',
+      valueRili: 'Alexander Pavlenko',
+      valueGensui: 'Alexander Pavlenko',
+      selectedValue: 'Alexander Pavlenko',
+      selectedFollow: 'Alexander Pavlenko',
+      selectedYear: '2024年',
+      gengxin: '--',
+      pinlv: '--',
       hrefList: [
         { id: 1, url: '/DatePage' },
         { id: 2, url: '/WinPage' },
         { id: 3, url: '/RateTime' },
         { id: 4, url: '/ProfitPage' },
         { id: 5, url: '/FollowPage' }
+      ],
+      date: [
+        { value: '近一周', label: '近一周' },
+        { value: '近半个月', label: '近半个月' },
+        { value: '近一个月', label: '近一个月' }
+      ],
+      yearList: [
+        { value: '2024年', label: '2024年' },
+        { value: '2023年', label: '2023年' },
+        { value: '2022年', label: '2022年' },
+        { value: '2021年', label: '2021年' },
+        { value: '2020年', label: '2020年' },
+        { value: '2019年', label: '2019年' },
+        { value: '2018年', label: '2018年' },
+        { value: '2017年', label: '2017年' }
+      ],
+      nameList: [
+        { value: '2024年', label: '2024年' },
+        { value: '2023年', label: '2023年' },
+        { value: '2022年', label: '2022年' },
+        { value: '2021年', label: '2021年' },
+        { value: '2020年', label: '2020年' },
+        { value: '2019年', label: '2019年' },
+        { value: '2018年', label: '2018年' },
+        { value: '2017年', label: '2017年' }
+      ],
+      itemList: [
+        { id: 1, name: 'Alexander Pavlenko' },
+        { id: 2, name: 'Sarowar Jahan' },
+        { id: 3, name: 'Niccolo Tirelli' },
+        { id: 4, name: 'Thien Long Do' },
+        { id: 5, name: 'Tho Minh Cao' },
+        { id: 6, name: 'Anteno Harpa' },
+        { id: 7, name: 'Ady Suyoko' },
+        { id: 8, name: 'Michaela Kreindl' }
       ]
+
     }
+  },
+  mounted () {
+    this.valueRili = this.$store.state.name[0]
+    this.valueGensui = this.$store.state.name[0]
+    this.selectedValue = this.$store.state.name[0]
+    this.selectedFollow = this.$store.state.name[0]
   },
   methods: {
     expand (id) {
@@ -126,6 +246,25 @@ export default {
       } else {
       // 处理未找到对应id的页面逻辑
       }
+    },
+    handleChild (geng, pin) {
+      this.gengxin = geng
+      this.pinlv = pin
+    },
+    handleCommand (command) {
+      this.selectedValue = command.name
+    },
+    handleYear (command) {
+      this.selectedYear = command.value
+    },
+    handleDate (command) {
+      this.valueWin = command.value
+    },
+    handleRili (command) {
+      this.valueRili = command.name
+    },
+    handleFollow (command) {
+      this.selectedFollow = command.name
     }
 
   }
@@ -134,7 +273,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container{
+.wrap{
 
     #bgmp{
     position: fixed;
@@ -162,9 +301,11 @@ export default {
               padding:0.12rem;
                .big{
                   width:95%;
+
                   display:flex;
                   justify-content: space-between;
                   align-items: center;
+
                   h2{
                     color:white;
                     font-size:0.12rem;
@@ -199,14 +340,43 @@ export default {
               height:1.5rem;
               background-size: 100% 100%;
 
+              .menu{
+                margin-left:1.1rem;
+                 .el-dropdown-link {
+                  cursor: pointer;
+                  color:#00ffff;
+
+                }
+                .el-icon-arrow-down {
+                  font-size: 12px;
+                }
+
+              }
+
           }
+
           .map{
              background:url(/public/static/img/home/d.png) no-repeat center 0 ;
               background-size: 100% 100%;
-              height:2.1rem;
+              height:1.6rem;
+
+              #expand{
+                width:95%;
+                margin:0 auto;
+                height:0.1rem;
+
+                display:flex;
+                .el-icon-full-screen{
+                  margin-left:auto;
+                      color:white;
+                    cursor: pointer;
+                    font-weight: bold;
+
+              }
+              }
               .textBox{
                 height:50%;
-                margin-top:0.03rem;
+                margin-top:0.1rem;
                   // background-color: rgba(109, 161, 218,0.5);
                 // background-color: red;
                 .el-dropdown-link {
@@ -218,14 +388,26 @@ export default {
                 .el-icon-arrow-down {
                   font-size: 0.1rem;
                 }
+
                 .ku{
                   margin:0 auto;
                   // background-color: #d26460;
-                  height:1rem;
+                  font-size:0.5rem;
+                  text-shadow:
+                  1px 1px rgba(170, 207, 243, 0.8),
+                  2px 2px rgba(170, 207, 243, 0.8),
+                  3px 3px rgba(170, 207, 243, 0.8),
+                  4px 4px rgba(170, 207, 243, 0.8),
+                  5px 5px rgba(170, 207, 243, 0.8),
+                  6px 6px rgba(170, 207, 243, 0.8);
+
+                  text-align: center;
+                  color:#00ffff;
+                  height:0.6rem;
 
                 }
                 .time{
-                  margin-left:0.15rem;
+                  margin-left:1.3rem;
                   font-size:0.08rem;
                   color:#00ffff
                 }
@@ -241,43 +423,67 @@ export default {
                 }
               }
               .chart{
-                height:40% !important;
+                height:33% !important;
 
               }
           }
           .pro{
             background:url(/public/static/img/home/pro_k.png) no-repeat center 0 ;
               background-size: 100% 100%;
+              height:2rem;
+              .big{
+                margin-top:0.05rem;
+                menu{
+                  width:1rem;
+                }
 
-              height:1.6rem;
-              .chart{
-                margin-left:0.1rem;
-                height:1.25rem;
-                margin-top:0rem !important;
-              }
-              h2{
+               h2{
                 margin-top:0.15rem !important;
                 margin-left:0.3rem;
               }
               .el-icon-full-screen{
                  margin-top:0.15rem !important;
               }
+              }
+
+              .chart{
+                margin-left:0.1rem;
+                height:1.5rem;
+
+              }
 
           }
           .per{
                background:url(/public/static/img/home/dp_右上.png) no-repeat center 0 ;;
               background-size: 100% 100%;
+              .big{
+                display:block !important;
+                height:0.15rem;
+              }
+              .chart{
+                height:1.8rem;
+              }
+
           }
           .num{
                  background:url(/public/static/img/home/dp_右下.png) no-repeat center 0 ;;
               background-size: 100% 100%;
               height:1.5rem;
+               menu{
+                  width:1rem;
+                }
               .chart{
                 height:1.3rem;
 
               }
 
           }
+          .date{
+            .chart{
+              height:1.8rem;
+            }
+          }
+
       }
 
       .column:nth-child(2) {
@@ -285,5 +491,8 @@ export default {
       }
    }
 }
+
+</style>
+<style>
 
 </style>

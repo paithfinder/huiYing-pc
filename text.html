@@ -1,111 +1,33 @@
-好的，我来调整一下代码，将导航栏改为悬浮在页面侧边的模式：
-
+可以使用 HTML、CSS 和 JavaScript 来实现这样的进度条。以下是一个简单的示例：
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>悬浮侧边导航栏</title>
-<style>
-body, html {
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    display: flex;
-}
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 100vh;
-    width: 200px;
-    background-color: #333;
-    padding: 20px;
-    color: white;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin-bottom: 10px;
-}
-
-.sidebar ul li a {
-    text-decoration: none;
-    color: white;
-}
-
-.sidebar ul li a.active {
-    font-weight: bold;
-}
-
-.content {
-    margin-left: 220px;
-    padding: 20px;
-}
-
-.section {
-    height: 500px;
-    margin-bottom: 20px;
-    background-color: #f0f0f0;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Progress Bar</title>
+    <style>
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 4px;
+            position: relative;
+        }
+        .progress-bar .progress-fill {
+            width: 50%;
+            height: 100%;
+            background-color: pink;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
 </head>
 <body>
-<div id="app">
-    <div class="container">
-        <div class="sidebar">
-            <ul>
-                <li v-for="section in sections" :key="section.id">
-                    <a :href="'#' + section.id" :class="{ active: section.active }">{{ section.title }}</a>
-                </li>
-            </ul>
-        </div>
-        <div class="content">
-            <div v-for="section in sections" :key="section.id" :id="section.id" class="section">
-                {{ section.title }}
-            </div>
-        </div>
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-<script>
-new Vue({
-    el: '#app',
-    data: {
-        sections: [
-            { id: 'section1', title: 'Section 1', active: false },
-            { id: 'section2', title: 'Section 2', active: false },
-            { id: 'section3', title: 'Section 3', active: false },
-            { id: 'section4', title: 'Section 4', active: false },
-            { id: 'section5', title: 'Section 5', active: false }
-        ]
-    },
-    mounted() {
-        window.addEventListener('scroll', this.handleScroll);
-    },
-    methods: {
-        handleScroll() {
-            const scrollTop = window.scrollY;
-            this.sections.forEach(section => {
-                const el = document.getElementById(section.id);
-                if (el) {
-                    const offsetTop = el.offsetTop;
-                    const offsetHeight = el.offsetHeight;
-                    section.active = scrollTop >= offsetTop && scrollTop < offsetTop + offsetHeight;
-                }
-            });
-        }
-    }
-});
-</script>
 </body>
 </html>
+```
+在上述代码中，`.progress-bar` 是进度条的容器元素，`.progress-fill` 是表示进度的填充部分。您可以根据需要调整样式和颜色。

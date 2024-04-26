@@ -9,41 +9,97 @@
 </template>
 
 <script>
-
 import axios from 'axios'
-
 export default {
+  props: ['radio', 'selectedSymbol'],
 
   data () {
     return {
-      upColor: '#00da3c',
-      downColor: '#ec0000',
+      upColor: 'rgba(239, 35, 42, 0.4)',
+      downColor: 'rgba(20, 177, 67, 0.4)',
+      defaultState: '交易中',
       myChart: null,
       rawData: [],
       categoryData: [],
       values: [],
-      volumes: []
+      volumes: [],
+      baseUrl: '/currencyExchangeCharts/getCurrencyExchangeChartsData',
+      // kUrl: '/currencyExchangeCharts/getCurrencyExchangeChartsData/EURAUD/noTime/近24h',
+      defaultName: 'EURAUD',
+      defaultBut: '近24h'
+    }
+  },
+  watch: {
+    radio (newValue) {
+      this.button = newValue
+      console.log(this.button)
+      this.getData()
+      this.updateChart()
+    },
+    selectedSymbol (newValue) {
+      this.name = newValue
+      console.log(this.name)
+      this.getData()
+      this.updateChart()
+    }
+  },
+  computed: {
+    state: {
+      get () {
+        return this.defaultState
+      },
+      set (value) {
+        this.defaultState = value
+      }
+    },
+    name: {
+      get () {
+        return this.defaultName
+      },
+      set (value) {
+        this.defaultName = value
+      }
+    },
+
+    button: {
+      get () {
+        return this.defaultBut
+      },
+      set (value) {
+        this.defaultBut = value
+      }
     }
   },
   methods: {
     splitData (rawData) {
-      // console.log(rawData)
-      // 创建一个新的数组来存储处理后的数据
+    // 创建一个新的数组来存储处理后的数据
       const newCategoryData = []
       const newValues = []
       const newVolumes = []
 
-      for (let i = 0; i < rawData.length; i++) {
-        newCategoryData.push(rawData[i].splice(0, 1)[0])
-        newValues.push(rawData[i])
-        newVolumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1])
-      }
+      // 遍历原始数据
+      rawData.forEach(item => {
+      // 提取日期作为X轴数据
+        newCategoryData.push(item.Time)
+        // 提取OHLC数据作为K线图的数据
+        newValues.push([item.Open, item.Close, item.Low, item.High])
+      })
 
+      for (let i = 0; i < rawData.length; i++) {
+        const time = rawData[i].Time
+        const tickVolume = rawData[i].Tick_volume
+        const spread = rawData[i].Spread
+        const isBuy = spread === '1' // 如果Spread是1，则表示买入
+
+        newVolumes.push([time, tickVolume, isBuy ? 1 : -1])
+      }
       // 更新数据属性
       this.categoryData = newCategoryData
       this.values = newValues
       this.volumes = newVolumes
-      console.log(this.categoryData)
+      console.log(this.volumes)
+
+      this.updateChart()
     },
     calculateMA (dayCount) {
       const result = []
@@ -54,9 +110,9 @@ export default {
         }
         let sum = 0
         for (let j = 0; j < dayCount; j++) {
-          sum += this.values[i - j][1]
+          sum += +this.values[i - j][1]
         }
-        result.push(+(sum / dayCount).toFixed(3))
+        result.push(sum / dayCount)
       }
       return result
     },
@@ -67,14 +123,21 @@ export default {
         // ...（这里填写你的ECharts配置）
       })
     },
-    getData () {
-      // 假设你的数据API是下面这样的URL
-      const dataUrl = 'http://localhost:8999/static/rate/stock-DJI.json'
-      axios.get(dataUrl).then(response => {
-        this.rawData = response.data
-        this.splitData(this.rawData)
-        this.updateChart()
-      })
+    async getData () {
+      try {
+        const res = await axios.get(this.baseUrl + '/' + this.name + '/' + this.button)
+        console.log(res.data)
+        if (res.data.data !== null) {
+          console.log(res.data)
+          this.rawData = res.data.data
+          this.splitData(this.rawData)
+          if (res.data.weekend === true) {
+            this.state = '停盘中'
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     updateChart () {
       const option = {
@@ -210,7 +273,7 @@ export default {
           {
             type: 'inside',
             xAxisIndex: [0, 1],
-            start: 98,
+            start: 50,
             end: 100
 
           },
@@ -219,7 +282,7 @@ export default {
             xAxisIndex: [0, 1],
             type: 'slider',
             top: '80%',
-            start: 98,
+            start: 50,
             end: 100
 
           }
@@ -236,6 +299,7 @@ export default {
               borderColor0: undefined
             }
           },
+
           {
             name: 'MA5',
             type: 'line',
@@ -273,12 +337,13 @@ export default {
             }
           },
           {
-            name: 'Volume',
+            name: 'tick-Volume',
             type: 'bar',
             xAxisIndex: 1,
             yAxisIndex: 1,
             data: this.volumes
           }
+
         ]
       }
       this.myChart.setOption(option)

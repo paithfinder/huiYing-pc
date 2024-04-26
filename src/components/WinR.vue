@@ -7,18 +7,52 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
+  props: ['valueWin'],
   data () {
     return {
     // 获取的请求数据
       winData: [],
+      baseUrl: '/winRate/getWinRate/',
+      t: '近一周',
+      defaultData: [
+        { value: 335, name: 'Direct' },
+        { value: 310, name: 'Email' },
+        { value: 274, name: 'Union Ads' },
+        { value: 235, name: 'Video Ads' },
+        { value: 400, name: 'Search Engine' },
+        { value: 305, name: 'Direct' },
+        { value: 430, name: 'Email' },
+        { value: 174, name: 'Union Ads' },
+        { value: 285, name: 'Video Ads' },
+        { value: 200, name: 'Search Engine' }
+      ],
       myChart: null
     }
   },
   // 由于初始化echarts实例对象需要使用到dom元素,因此必须要放到mounted中, 而不是created
   mounted () {
     this.initChart()
+
     this.getData()
+  },
+  computed: {
+    time: {
+      get () {
+        return this.t
+      },
+      set (value) {
+        this.t = value
+      }
+    }
+  },
+  watch: {
+    valueWin (newValue) {
+      console.log(newValue)
+      this.time = newValue
+      this.getData()
+    }
   },
   methods: {
     initChart () {
@@ -27,8 +61,22 @@ export default {
     },
     // 获取数据
     async getData () {
-      this.updateChart()
+      try {
+        const res = await axios.get(this.baseUrl + this.time)
+        if (res.data.data !== null) {
+          console.log(res.data)
+          // 直接赋值可能不会触发响应式更新，可以使用 Vue.set 或其他方法
+          this.winData = res.data
+          // 使用 Vue.nextTick 来确保 DOM 更新完成后调用 updateChart
+          this.$nextTick(() => {
+            this.updateChart()
+          })
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
+
     // 处理数据并且更新图表
     updateChart () {
       // 处理请求返回的数据
@@ -36,14 +84,7 @@ export default {
       // 图表的相关配置
       const option = {
         // backgroundColor: '#2c343c',
-        title: {
 
-          left: 'center',
-          top: 20,
-          textStyle: {
-            color: '#ccc'
-          }
-        },
         tooltip: {
           trigger: 'item'
         },
@@ -51,37 +92,8 @@ export default {
           show: true, // 是否显示工具栏组件
           left: 2, // toolbox的定位位置
           itemSize: 30,
-          bottom: '85%',
+          bottom: '85%'
 
-          feature: {
-            myTool1: {
-              show: true,
-
-              title: '周',
-              icon: 'image://static/img/home/trada/周.png',
-
-              onclick: function () {
-                alert('myToolHandler1')
-              }
-
-            },
-            myTool2: {
-              show: true,
-              title: '返回首页',
-              icon: 'image://static/img/home/trada/半个月.png',
-              onclick: function () {
-                alert('myToolHandler1')
-              }
-            },
-            myTool3: {
-              show: true,
-              title: '返回首页',
-              icon: 'image://static/img/home/trada/月.png',
-              onclick: function () {
-                alert('myToolHandler1')
-              }
-            }
-          }
         },
         visualMap: {
           show: false,
@@ -97,20 +109,18 @@ export default {
             type: 'pie',
             radius: '85%',
             center: ['50%', '50%'],
-            data: [
-              { value: 335, name: 'Direct' },
-              { value: 310, name: 'Email' },
-              { value: 274, name: 'Union Ads' },
-              { value: 235, name: 'Video Ads' },
-              { value: 400, name: 'Search Engine' },
-              { value: 305, name: 'Direct' },
-              { value: 430, name: 'Email' },
-              { value: 174, name: 'Union Ads' },
-              { value: 285, name: 'Video Ads' },
-              { value: 200, name: 'Search Engine' }
-            ].sort(function (a, b) {
+            data: this.winData.sort(function (a, b) {
               return a.value - b.value
-            }),
+            }).map(item => ({
+              value: item.value,
+              name: item.name,
+              itemStyle: {
+                color: '#bf444c',
+                shadowBlur: 200,
+                shadowColor: 'rgba(0, 0, 0)'
+              }
+            })),
+
             roseType: 'radius',
             label: {
               color: 'rgba(255, 255, 255, 0.7)'
@@ -123,11 +133,7 @@ export default {
               length: 10,
               length2: 20
             },
-            itemStyle: {
-              color: '#c23531',
-              shadowBlur: 200,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            },
+
             animationType: 'scale',
             animationEasing: 'elasticOut',
             animationDelay: function (idx) {

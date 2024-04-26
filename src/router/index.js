@@ -11,6 +11,12 @@ import NowRate from '@/views/NowRate'
 import NavBar from '@/views/NavBar'
 import NowNews from '@/views/NowNews'
 import RateTime from '@/views/RateTime.vue'
+import EcoIndex from '@/views/EcoIndex'
+import BaiKe from '@/views/BaiKe.vue'
+import KData from '@/views/KData.vue'
+import AgriMei from '@/views/AgriMei.vue'
+import GdpMei from '@/views/GdpMei.vue'
+import QuesTi from '@/views/QuesTi.vue'
 Vue.use(VueRouter)
 const routes = [
   {
@@ -19,17 +25,27 @@ const routes = [
   },
   {
     path: '/NavBar',
-    component: NavBar,
-    children: [
-      {
-        path: '/NowRate',
-        component: NowRate
-      },
-      {
-        path: '/NowNews',
-        component: NowNews
-      }
-    ]
+    component: NavBar
+  },
+  {
+    path: '/EcoIndex',
+    component: EcoIndex
+  },
+  {
+    path: '/QuesTi',
+    component: QuesTi
+  },
+  {
+    path: '/BaiKe',
+    component: BaiKe
+  },
+  {
+    path: '/NowNews',
+    component: NowNews
+  },
+  {
+    path: '/NowRate',
+    component: NowRate
   },
   {
     path: '/PreView',
@@ -64,6 +80,18 @@ const routes = [
   {
     path: '/RateTime',
     component: RateTime
+  },
+  {
+    path: '/KData',
+    component: KData
+  },
+  {
+    path: '/agri',
+    component: AgriMei
+  },
+  {
+    path: '/gdp',
+    component: GdpMei
   }
 ]
 const router = new VueRouter({

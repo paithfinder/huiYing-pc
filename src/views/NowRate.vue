@@ -1,25 +1,29 @@
 <template>
-  <div class="container">
+  <div class="wrap">
+          <video autoplay loop muted poster="static/img/home/homebg.mp4" id="bgmp" >
+        <source src="static/img/home/homebg.mp4" type="video/mp4">
+    </video>
+    <NavBar id="b"></NavBar>
     <div class="view">
       <div class="top" >
         <div class="table" >
           <div class="text">
             <!-- 左边时间 -->
-            <div class="time">
-              最后更新时间:2024-4-4
+            <div class="time" style="color:#fff">
+              最后更新时间:{{  nowTime }}
             </div>
             <!-- 中间标题 -->
-            <h3>外汇实时波动监控</h3>
+            <h3 style="transform:translateX(-0.6rem);color:#fff">外汇实时波动监控</h3>
             <!-- 右边图标切换 -->
             <div style="display: flex;align-items: center;">
-              <div style="color:red;font-size:0.09rem;font-weight: bold;">切换</div>
-              <img src="/static/img/rate/切换.png" alt="" class="change" @click="shift" style="margin-left:0.05rem;">
+              <!-- <div style="color:red;font-size:0.09rem;font-weight: bold;">切换</div> -->
+              <!-- <img src="/static/img/rate/切换.png" alt="" class="change" @click="shift" style="margin-left:0.05rem;"> -->
             </div>
           </div>
           <!-- 表格 -->
-          <table v-if="tabShow"
-          border="1px" width="100%" height="90%" cellspacing="0" color="#55647e" border-color="#d4d6da" style="border-collapse:collapse;  table-layout: fixed;">
-            <thead style="color:#504c57;">
+          <table
+          border="1px" width="100%" height="90%" cellspacing="0"  border-color="#d4d6da"  style="border-collapse:collapse;  table-layout: fixed;">
+            <thead >
               <tr >
                 <th>货币</th>
                 <th>1分钟</th>
@@ -50,52 +54,63 @@
             </tbody>
           </table>
           <!-- 世界地图 -->
-          <WorldMap v-else ></WorldMap>
+          <!-- <WorldMap v-else ></WorldMap> -->
         </div>
       </div>
       <div class="but" id="a">
           <div class="left" v-show="unfold">
-            <div class="top">
+            <div class="top" >
                  <el-table
-    :data="tableData"
+    :data="coinData"
     height="100%"
     border
-    highlight-current-row
-    style="width: 100%"
-     @row-click="handleRowClick">
+    style="width: 100%;border-radius:0.1rem;"
+     @row-click="handleRowClick"
+  :row-style="enableRowStyle ? rowStyle : null">
     <el-table-column
       prop="symbol"
       label="代码/名称"
-      width="120">
+      width="110"
+      align="center">
       <template slot-scope="scope">
-      <div style="text-align: center;">
+      <div style="text-align: center;font-weight:bold">
         {{ scope.row.symbols }}
       </div>
-      <div style="text-align: center!important">
+      <div style="text-align: center!important;font-size:0.07rem;">
         {{ scope.row.chinese }}
       </div>
     </template>
     </el-table-column>
     <el-table-column
-      prop="name"
+      prop="newPrice"
       label="最新价"
-      width="70">
+      align="center"
+      width="80">
     </el-table-column>
     <el-table-column
-      prop="address"
-      label="涨跌幅">
+      prop="oneMinSpread"
+      label="涨跌幅"
+      align="center">
+      <template slot-scope="scope">
+      <div style="text-align: center;">
+        {{ scope.row.oneMinSpread }}
+      </div>
+      <div style="text-align: center!important;font-size:0.07rem;font-weight:bold">(
+        {{ scope.row.oneMinChange }})
+      </div>
+    </template>
     </el-table-column>
 
     </el-table>
             </div>
-            <div class="bottom">
-                <el-descriptions title="盘口数据" style="font-size: 10px;" >
-    <el-descriptions-item label="今开">1.2786</el-descriptions-item>
-    <el-descriptions-item label="最高" contentStyle="color:red;">1.2804</el-descriptions-item>
-    <el-descriptions-item label="买入价">1.2661</el-descriptions-item>
-    <el-descriptions-item label="昨收">1.2744</el-descriptions-item>
-    <el-descriptions-item label="最低">1.2442</el-descriptions-item>
-    <el-descriptions-item label="卖出价">1.2744</el-descriptions-item>
+            <div class="bottom" >
+                <el-descriptions title="盘口数据" style="font-size: 10px;color:#fff" >
+                    <el-descriptions-item label="今开" >{{  capData.openToday }}</el-descriptions-item>
+                    <el-descriptions-item label="最高" contentStyle="color:red;">{{ capData?.highToday }}</el-descriptions-item>
+                    <el-descriptions-item label="最大交易量">{{ capData?.tickVolMax }}</el-descriptions-item>
+                    <el-descriptions-item label="昨收">{{ capData?.closeYesterday }}</el-descriptions-item>
+                    <el-descriptions-item label="最低">{{ capData?.lowToday }}</el-descriptions-item>
+                    <el-descriptions-item label="最大点差">{{ capData?.spreadMax }}</el-descriptions-item>
 </el-descriptions>
 
             </div>
@@ -104,15 +119,15 @@
             <div class="chartWrap">
                 <div class="chartHead">
                     <div class="one">
-                        <h3>GBP/CHF </h3>
-                        <div>1.266200-0.10124-0.9700%</div>
+                        <h3 >{{ selectedSymbol }} </h3>
+                        <div>{{ selectedPrice }}-{{ selectedSpread }}-{{ selectedChange }}</div>
                     </div>
-                    <div class="two">
-                        <span>英镑兑瑞士法郎</span>
+                    <div class="two" style="display:flex;align-items: center;">
+                        <div >{{ selectedChinese }}</div>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>交易中 </span>
+                        <div style="color:red;transform:translate(5.5rem,0.1rem);font-weight:bold ">{{  state }} </div>
                     </div>
                     <div class="three">
                         <img v-show="unfold" src="/static/img/rate/折叠.png" alt="" @click="left" >
@@ -120,17 +135,17 @@
                          <div style="margin-left:0.2rem;">
 
       <el-radio-group v-model="radio" size="small" >
-      <el-radio-button label="近一周" ></el-radio-button>
+      <el-radio-button label="近24h" ></el-radio-button>
+      <el-radio-button label="近一周"></el-radio-button>
       <el-radio-button label="半个月"></el-radio-button>
       <el-radio-button label="一个月"></el-radio-button>
-      <el-radio-button label="两个月"></el-radio-button>
     </el-radio-group>
 
   </div>
                     </div>
                 </div>
                 <div class="chartContent">
-                    <RateCh></RateCh>
+                    <RateCh :kData="kData" ref="childRef" :radio="radio" :selectedSymbol="selectedSymbol"></RateCh>
                 </div>
             </div>
 
@@ -140,8 +155,8 @@
     </div>
      <div class="sidenav" style="z-index:100;position:absolute;">
         <ul>
-            <li style="border-bottom: 1px solid #edf1f9;"><a href="#" style="text-decoration: none;"><span class="bg"></span><span>外汇异动</span></a></li>
-            <li><a href="#a" style="text-decoration: none;"><span class="bg"></span><span>细节分析</span></a></li>
+            <li style="border-bottom: 1px solid #edf1f9;"><a href="#b" @click.prevent="anchor('b')" style="text-decoration: none;"><span class="bg"></span><span>外汇异动</span></a></li>
+            <li><a href="#a" @click.prevent="anchor('a')" style="text-decoration: none;"><span class="bg"></span><span>细节分析</span></a></li>
         </ul>
     </div>
   </div>
@@ -149,25 +164,45 @@
 
 <script>
 import axios from 'axios'
-import WorldMap from '@/components/WorldMap'
+// import WorldMap from '@/components/WorldMap'
 import RateCh from '@/components/RateCh.vue'
+import NavBar from '@/components/NavBar.vue'
 
 export default {
   components: {
     RateCh,
-    WorldMap
+    // WorldMap,
+    NavBar
 
   },
 
   data () {
     return {
+      nowTime: '',
       coinData: [],
+      kData: [],
+      mapData: [],
+      state: '',
+      enableRowStyle: true,
+      capData: {
+        openToday: '-',
+        highToday: '-',
+        lowToday: '-',
+        closeYesterday: '-',
+        spreadMax: '-',
+        tickVolMax: '-'
+
+      },
+      radio: '近24h',
       baseUrl: 'currencyExchangeCharts/getCurrencyExchangeChartsData/',
-      coinUrl: '',
-      defaultParam: '/noTime',
-      selecedSymbol: '',
+      kUrl: '/currencyExchangeCharts/getCurrencyExchangeChartsData/EURAUD/noTime/近24h',
+      defaultCoin: 'EURAUD',
+      selectedSymbol: 'EURAUD',
+      selectedChinese: '欧元/澳元',
+      selectedPrice: '1.64353',
+      selectedSpread: '1.1',
+      selectedChange: '0.01%',
       tabShow: true,
-      radio: '分时',
       unfold: true,
       fold: false,
       tableData: [{
@@ -228,7 +263,32 @@ export default {
       ]
     }
   },
+  computed: {
+    panUrl: {
+      get () {
+        return '/handicapData/getHandicapData/' + this.defaultCoin
+      },
+      set (value) {
+        this.defaultCoin = value
+      }
+    }
+
+  },
+  watch: {
+    selectedSymbol (newValue) {
+      const item = this.coinData.find(item => item.symbols === newValue)
+      this.selectedChinese = item.chinese
+    }
+  },
   methods: {
+    anchor (anchorName) {
+    /* 找到锚点 */
+      const anchorElement = document.getElementById(anchorName)
+      /* 如果对应id的锚点存在，就跳转到锚点 */
+      if (anchorElement) {
+        anchorElement.scrollIntoView()
+      }
+    },
 
     left () {
       this.unfold = false
@@ -241,50 +301,90 @@ export default {
     shift () {
       this.tabShow = !this.tabShow
     },
+    rowStyle ({ row, rowIndex }) {
+    // 根据 isFirstRow 属性决定第一行的样式
+      if (row.rowStyle) {
+        return { backgroundColor: 'red' } // 第一行红色背景，白色字体
+      } else {
+        return {} // 其他行无特殊样式
+      }
+    },
     handleRowClick (row, event, column) {
       // console.log('我点击了', row.symbols)
       this.selectedSymbol = row.symbols
-      console.log(this.selectedSymbol)
+      this.selectedPrice = row.newPrice
+      this.selectedSpread = row.oneMinSpread
+      this.selectedChange = row.oneMinChange
+      this.enableRowStyle = false
+      this.panUrl = row.symbols
+      this.getCap()
     },
+
+    getNowTime (time) {
+      const hh = new Date(time).getHours() < 10 ? '0' + new Date(time).getHours() : new Date(time).getHours()
+      const mm = new Date(time).getMinutes() < 10 ? '0' + new Date(time).getMinutes() : new Date(time).getMinutes()
+      const ss = new Date(time).getSeconds() < 10 ? '0' + new Date(time).getSeconds() : new Date(time).getSeco()
+      const nowTime = hh + ':' + mm + ':' + ss
+      return nowTime
+    },
+    // 上方的表
     async getTable () {
       try {
         const res = await axios.get('/jinChart/getJinChart')
         console.log(res.data)
+        console.log('aababb')
+        if (res.data.data !== null) {
+          // console.log(res.data)
+          this.moneyTable = res.data.data
+          this.nowTime = res.data.time
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 左上角表
+    async getCoin () {
+      try {
+        const res = await axios.get('/currencyExchangeForms/getCurrencyExchangeFormsData')
+        // console.log(res)
         if (res.data !== null) {
+          res.data[0].rowStyle = { isFirstRow: true }
           console.log(res.data)
-          this.moneyTable = res.data
+          this.coinData = res.data
+          this.selectedChinese = res.data[0].chinese
+          this.selectedPrice = res.data[0].newPrice
+          this.selectedSpread = res.data[0].oneMinSpread
+          this.selectedChange = res.data[0].oneMinChange
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 盘口数据
+    async getCap () {
+      try {
+        const res = await axios.get(this.panUrl)
+        console.log(res.data)
+        if (res.data.data !== null) {
+          // console.log(res.data.data)
+          this.capData = res.data.data
+          console.log(this.capData)
+          console.log(this.capData.openToday)
         }
       } catch (error) {
         console.log(error)
       }
     }
-    // async getCoin () {
-    //   try {
-    //     const res = await axios.get('/currencyExchangeForms/getCurrencyExchangeFormsData')
-    //     // console.log(res)
-    //     if (res.data.data !== null) {
-    //       this.coinData = res.data.data
-    //       console.log(this.coinData)
-    //     }
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // }
+
   },
   mounted () {
     this.getTable()
-    // this.getCoin()
+    this.getCoin()
+    const k = this.$refs.childRef
+    this.state = k.state
   },
   created () {
-    if (!localStorage.getItem('visited')) {
-      localStorage.setItem('visited', 'true')
-      // 用户是第一次访问
-      this.coinUrl = this.baseUrl + this.selectedSymbol + this.defaultSymbol
-      this.getCoin()
-    } else {
-    // 用户不是第一次访问
-      this.coinUrl = this.baseUrl + this.selectedSymbol
-    }
+    this.getCap()
   }
 }
 </script>
@@ -292,21 +392,34 @@ export default {
 <style lang="less" scoped>
 #app{
   background-color:#eceff7;
-  .container{
+  .wrap{
     width:100%;
+    overflow-y:scroll;
     background-color:#eceff7;
+    #bgmp{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    }
+    .box{
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
     .view{
     width:100%;
-    height:100vh;
     .top{
       width:100%;
       height:95vh;
-      background-color:#eceff7;
+      background-color:rgba(71, 100, 157,0.5);
       cursor: pointer;
       .table{
         width:98%;
         height:90%;
-        background-color:#fff;
+        background-color:rgba(71, 100, 157,0.5);
         margin:0 auto;
         transform:translateY(2%);
         box-sizing: border-box;
@@ -314,8 +427,11 @@ export default {
 
         table{
           tr:nth-child(odd) {
-  background-color: #edf1f9;
-}
+             background-color: rgba(255,255,255,0.5);
+          }
+          tr:nth-child(even) {
+             background-color: rgba(255,255,255,0.5);
+          }
         }
         .text{
           display:flex;
@@ -341,38 +457,47 @@ export default {
     .but{
       display:flex;
       width:100%;
-      height:90vh;
-      background-color:#eceff7;
+      height:100vh;
+      background-color:transparent ;
 
        .left{
         flex:2;
+        height:91%;
         box-sizing: border-box;
+
         .top{
             width:90%;
-            height:70%;
-            background-color: #fff;
+            height:80%;
+            background-color:#25447e;
             margin:0 auto;
             border-radius:0.1rem;
+
         }
         .bottom{
-            height:20%;
-            width:90%;
-            background-color: #fff;
+            height:16%;
+            width:19.5%;
+            background-color: rgba(28, 62, 121);
             margin:0 auto;
-            margin-top:0.06rem;
+            margin-top:0.1rem;
+            margin-left:0.1rem;
             border-radius:0.1rem;
             padding:0.1rem;
             box-sizing:border-box;
             overflow:hidden;
+            position:absolute;
+            z-index: 3;
         }
     }
     .right{
         flex:7;
-        background-color:#fff;
         border-radius:0.1rem;
         box-sizing:border-box;
         padding:0.2rem;
         height:91%;
+        z-index:5;
+        //    background: url(/public/static/img/rate/背景.png) no-repeat;
+        // background-size: cover;
+        background-color: #fff;
         .chartWrap{
             width:95%;
             margin:0 auto;
@@ -412,6 +537,10 @@ export default {
                 width:100%;
                 height:65vh;
 
+                .wrap{
+                  overflow:hidden;
+                  background-color: transparent;
+                }
             }
 
         }
@@ -430,7 +559,7 @@ ul, li {
     position: relative;
 
     > ul {
-        background: #92a7ba;
+        background: #ccc;
         position: fixed;
         top: 2rem;
         right: 0.2rem;
@@ -441,6 +570,7 @@ ul, li {
             width: 0.3625rem; /* 将宽度减半 */
             height: 0.375rem; /* 将高度减半 */
             cursor: pointer;
+            // background-color:red;
 
             > a {
                 display: block;
@@ -452,11 +582,11 @@ ul, li {
 
                 > .bg {
                     position: absolute;
-                    top: -0.00625rem; /* 根据比例调整背景位置 */
+                    top: -0.008rem; /* 根据比例调整背景位置 */
                     bottom: 0.00625rem; /* 根据比例调整背景位置 */
                     left: 0;
                     right: 0;
-                    background: transparent;
+                    background: #92a7ba;
                     z-index: 2;
                 }
 
@@ -485,9 +615,49 @@ ul, li {
 }
 }
 .red-cell{
-  background-color:#f17f7f
+  background-color:rgb(210, 116, 116)
 }
 .green-cell{
-  background-color:#8fc291
+  background-color:rgb(83, 229, 88)
+}
+</style>
+<style>
+.el-table th, .el-table tr, .el-table__expanded-cell{
+    background-color: rgba(37, 75, 139) !important;
+}
+.el-table,.el-table__empty-text{
+    color: #55b4f8 !important;
+}
+.el-table{
+  background-color: rgb(54, 86, 150) !important;
+}
+.el-table th{
+  color:#fff !important;
+}
+
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: rgb(113, 90, 90) !important;
+}
+.el-table thead{
+    color: #58BAFF !important;
+}
+.el-table:before{
+    background-color: #4094DE !important;
+}
+.el-table td, .el-table th.is-leaf{
+    border-bottom: 1px solid #0095F4 !important;
+}
+.el-descriptions__body {
+  background-color: rgba(28, 62, 121) !important;
+
+}
+.el-descriptions-item__label{
+    color:#fff
+  }
+  .el-descriptions-item__content{
+    color:#fff;
+  }
+::v-deep .el-table__body tr.current-row > td.el-table__cell {
+  background-color: rgba(164, 37, 37, 0.3) !important;
 }
 </style>

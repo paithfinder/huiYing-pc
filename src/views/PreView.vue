@@ -42,7 +42,7 @@ export default {
         customClass: 'custom-confirm-dialog' // 添加自定义类名
 
       }).then(() => {
-        this.$router.push('/HomePage')
+        this.$router.push('/QuesTi')
       }).catch(() => {
 
       })
@@ -58,7 +58,7 @@ export default {
       height: 100%;
       position:relative;
   #bg{
-     position: fixed;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;

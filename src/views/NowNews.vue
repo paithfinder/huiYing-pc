@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div class="wrap">
+        <NavBar id="a"></NavBar>
        <div class="cal">
             <div class="title">
                 <h3>财经日历</h3>
@@ -99,7 +100,7 @@
           align="center">
           <template slot-scope="scope">
       <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
-        {{ scope.row.gongbu }}
+        {{ scope.row.gongu }}
       </div>
     </template>
       </el-table-column>
@@ -131,7 +132,7 @@
       <div style="display:flex;align-items: center">
 
         <!-- 图片 -->
-        <img :src="scope.row.src" alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
+        <img :src="scope.row.src ? scope.row.src : '\static\img\news\各个国家的图片\无.png'" alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
               <!-- 数据值 -->
                     <div :style="{ color: scope.row.count >= 3 ? 'red' : '' }">
         {{ scope.row.country }}
@@ -166,8 +167,8 @@
        </div>
             <div v-if="chang" class="sidenav" style="z-index:100;position:absolute;">
         <ul>
-            <li><a href="#" style="text-decoration: none;border-bottom: 1px solid #edf1f9;"><span class="bg"></span><span>经济数据</span></a></li>
-            <li><a href="#b" style="text-decoration: none;"><span class="bg"></span><span>事件数据</span></a></li>
+            <li><a href="#a" @click.prevent="anchor('a')" style="text-decoration: none;border-bottom: 1px solid #edf1f9;"><span class="bg"></span><span>经济数据</span></a></li>
+            <li><a href="#b" @click.prevent="anchor('b')" style="text-decoration: none;"><span class="bg"></span><span>事件数据</span></a></li>
         </ul>
     </div>
   </div>
@@ -175,6 +176,7 @@
 
 <script>
 import axios from 'axios'
+import NavBar from '@/components/NavBar.vue'
 export default {
   data () {
     return {
@@ -207,7 +209,7 @@ export default {
   },
   watch: {
     ecoTable (newValue) {
-      if (newValue.length > 8) {
+      if (newValue && newValue.length > 8) {
         this.chang = true
       } else {
         this.chang = false
@@ -250,8 +252,15 @@ export default {
   mounted () {
 
   },
-
   methods: {
+    anchor (anchorName) {
+    /* 找到锚点 */
+      const anchorElement = document.getElementById(anchorName)
+      /* 如果对应id的锚点存在，就跳转到锚点 */
+      if (anchorElement) {
+        anchorElement.scrollIntoView()
+      }
+    },
 
     active (dateName, wkName) {
       this.selectedName = dateName
@@ -390,16 +399,25 @@ export default {
       }
     }
 
-  }
+  },
+  components: {
 
+    NavBar
+
+  }
 }
 </script>
 
 <style lang="less" scoped>
-.container{
+.wrap{
     width:100%;
-    height:100%;
+    overflow-y:scroll;
     background-color: #eceff7;
+    .box{
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
 
     .cal{
         width:95%;
@@ -557,10 +575,10 @@ ul, li {
     position: relative;
 
     > ul {
-        background: #92a7ba;
+        background: #ccc;
         position: fixed;
         top: 2rem;
-        right: 0.05rem;
+        right: 0.2rem;
         width: 0.375rem; /* 将宽度减半 */
 
         > li {
@@ -568,6 +586,7 @@ ul, li {
             width: 0.3625rem; /* 将宽度减半 */
             height: 0.375rem; /* 将高度减半 */
             cursor: pointer;
+            // background-color:red;
 
             > a {
                 display: block;
@@ -579,11 +598,11 @@ ul, li {
 
                 > .bg {
                     position: absolute;
-                    top: -0.00625rem; /* 根据比例调整背景位置 */
+                    top: -0.008rem; /* 根据比例调整背景位置 */
                     bottom: 0.00625rem; /* 根据比例调整背景位置 */
                     left: 0;
                     right: 0;
-                    background: transparent;
+                    background: #92a7ba;
                     z-index: 2;
                 }
 

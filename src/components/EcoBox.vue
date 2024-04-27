@@ -1,7 +1,7 @@
 <template>
 <div class="littleBox">
     <div class="text">
-        <img src="/static/img/news/各个国家的图片/中国.png" alt="">
+        <img :src=this.imgUrl alt="">
         <div style="margin-left:0.05rem;">{{ name }}</div>
     </div>
     <div class="tu">
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  props: ['name', 'duotou', 'kongtou'],
+  props: ['name', 'duotou', 'kongtou', 'imgUrl'],
   mounted () {
     // console.log(this.show)
     this.initChart()
@@ -24,6 +24,7 @@ export default {
       this.updateChart()
     }
   },
+
   methods: {
 
     initChart () {

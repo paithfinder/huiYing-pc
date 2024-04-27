@@ -167,7 +167,7 @@
        </div>
             <div v-if="chang" class="sidenav" style="z-index:100;position:absolute;">
         <ul>
-            <li><a href="#a" @click.prevent="anchor('a')" style="text-decoration: none;border-bottom: 1px solid #edf1f9;"><span class="bg"></span><span>经济数据</span></a></li>
+            <li><a href="#a" @click.prevent="anchor('a')" style="text-decoration: none;border-bottom: 1px solid #edf1f9;" @click="scrollToTop"><span class="bg"></span><span>经济数据</span></a></li>
             <li><a href="#b" @click.prevent="anchor('b')" style="text-decoration: none;"><span class="bg"></span><span>事件数据</span></a></li>
         </ul>
     </div>
@@ -261,7 +261,10 @@ export default {
         anchorElement.scrollIntoView()
       }
     },
-
+    scrollToTop () {
+      const parent = document.querySelector('.wrap')
+      parent.scrollTop = 0
+    },
     active (dateName, wkName) {
       this.selectedName = dateName
       const str = [wkName, dateName]
@@ -273,6 +276,7 @@ export default {
     backNow () {
       this.selectedName = this.$store.getters.date
       this.active(this.$store.getters.date, this.$store.getters.weekDay)
+      this.findName()
     },
     pre () {
       if (this.canGoPre && this.viewedWeeks > 0) {

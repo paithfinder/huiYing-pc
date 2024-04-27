@@ -145,7 +145,7 @@
                     </div>
                 </div>
                 <div class="chartContent">
-                    <RateCh :kData="kData" ref="childRef" :radio="radio" :selectedSymbol="selectedSymbol"></RateCh>
+                    <RateCh :kData="kData" :state="state" @state="getState" :radio="radio" :selectedSymbol="selectedSymbol"></RateCh>
                 </div>
             </div>
 
@@ -155,7 +155,7 @@
     </div>
      <div class="sidenav" style="z-index:100;position:absolute;">
         <ul>
-            <li style="border-bottom: 1px solid #edf1f9;"><a href="#b" @click.prevent="anchor('b')" style="text-decoration: none;"><span class="bg"></span><span>外汇异动</span></a></li>
+            <li style="border-bottom: 1px solid #edf1f9;"><a href="#b" @click.prevent="anchor('b')" style="text-decoration: none;" @click="scrollToTop"><span class="bg"></span><span>外汇异动</span></a></li>
             <li><a href="#a" @click.prevent="anchor('a')" style="text-decoration: none;"><span class="bg"></span><span>细节分析</span></a></li>
         </ul>
     </div>
@@ -182,7 +182,7 @@ export default {
       coinData: [],
       kData: [],
       mapData: [],
-      state: '',
+      state: '交易中',
       enableRowStyle: true,
       capData: {
         openToday: '-',
@@ -289,7 +289,10 @@ export default {
         anchorElement.scrollIntoView()
       }
     },
-
+    scrollToTop () {
+      const parent = document.querySelector('.wrap')
+      parent.scrollTop = 0
+    },
     left () {
       this.unfold = false
       this.fold = true
@@ -374,14 +377,14 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    getState (state) {
+      this.state = state
     }
-
   },
   mounted () {
     this.getTable()
     this.getCoin()
-    const k = this.$refs.childRef
-    this.state = k.state
   },
   created () {
     this.getCap()

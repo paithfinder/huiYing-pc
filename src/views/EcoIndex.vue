@@ -12,28 +12,28 @@
       <img src="/static/img/eco/左箭头-.png" alt="" id="left"  @click="pre">
       <img src="/static/img/eco/右箭头.png" alt="" id="right" @click="next">
       <div class="pan" v-if="isNow">
-        <EcoBox :name="panData[0].type" :duotou="panData[0].duoTou" :kongtou="panData[0].kongTou" ></EcoBox>
-        <EcoBox :name="panData[1].type" :duotou="panData[1].duoTou" :kongtou="panData[1].kongTou" ></EcoBox>
-        <EcoBox :name="panData[2].type" :duotou="panData[2].duoTou" :kongtou="panData[2].kongTou" ></EcoBox>
-        <EcoBox :name="panData[3].type" :duotou="panData[3].duoTou" :kongtou="panData[3].kongTou" ></EcoBox>
-        <EcoBox :name="panData[4].type" :duotou="panData[4].duoTou" :kongtou="panData[4].kongTou" ></EcoBox>
-        <EcoBox :name="panData[5].type" :duotou="panData[5].duoTou" :kongtou="panData[5].kongTou" ></EcoBox>
+        <EcoBox :name="panData[0].type" :duotou="panData[0].duoTou" :kongtou="panData[0].kongTou" :imgUrl="panData[0].path"></EcoBox>
+        <EcoBox :name="panData[1].type" :duotou="panData[1].duoTou" :kongtou="panData[1].kongTou" :imgUrl="panData[1].path"></EcoBox>
+        <EcoBox :name="panData[2].type" :duotou="panData[2].duoTou" :kongtou="panData[2].kongTou" :imgUrl="panData[2].path"></EcoBox>
+        <EcoBox :name="panData[3].type" :duotou="panData[3].duoTou" :kongtou="panData[3].kongTou" :imgUrl="panData[3].path"></EcoBox>
+        <EcoBox :name="panData[4].type" :duotou="panData[4].duoTou" :kongtou="panData[4].kongTou" :imgUrl="panData[4].path"></EcoBox>
+        <EcoBox :name="panData[5].type" :duotou="panData[5].duoTou" :kongtou="panData[5].kongTou" :imgUrl="panData[5].path"></EcoBox>
       </div>
       <div class="pan" v-if="isNext">
-        <EcoBox :name="panData[6].type" :duotou="panData[6].duoTou" :kongtou="panData[6].kongTou"></EcoBox>
-        <EcoBox :name="panData[7].type" :duotou="panData[7].duoTou" :kongtou="panData[7].kongTou"></EcoBox>
-        <EcoBox :name="panData[8].type" :duotou="panData[8].duoTou" :kongtou="panData[8].kongTou"></EcoBox>
-        <EcoBox :name="panData[9].type" :duotou="panData[9].duoTou" :kongtou="panData[9].kongTou"></EcoBox>
-        <EcoBox :name="panData[10].type" :duotou="panData[10].duoTou" :kongtou="panData[10].kongTou"></EcoBox>
-        <EcoBox :name="panData[11].type" :duotou="panData[11].duoTou" :kongtou="panData[11].kongTou"></EcoBox>
+        <EcoBox :name="panData[6].type" :duotou="panData[6].duoTou" :kongtou="panData[6].kongTou" :imgUrl="panData[6].path"></EcoBox>
+        <EcoBox :name="panData[7].type" :duotou="panData[7].duoTou" :kongtou="panData[7].kongTou" :imgUrl="panData[7].path"></EcoBox>
+        <EcoBox :name="panData[8].type" :duotou="panData[8].duoTou" :kongtou="panData[8].kongTou" :imgUrl="panData[8].path"></EcoBox>
+        <EcoBox :name="panData[9].type" :duotou="panData[9].duoTou" :kongtou="panData[9].kongTou" :imgUrl="panData[9].path"></EcoBox>
+        <EcoBox :name="panData[10].type" :duotou="panData[10].duoTou" :kongtou="panData[10].kongTou" :imgUrl="panData[10].path"></EcoBox>
+        <EcoBox :name="panData[11].type" :duotou="panData[11].duoTou" :kongtou="panData[11].kongTou" :imgUrl="panData[11].path"></EcoBox>
       </div>
             <div class="pan" v-if="nn">
-        <EcoBox :name="panData[7].type" :duotou="panData[7].duoTou" :kongtou="panData[7].kongTou"></EcoBox>
-        <EcoBox :name="panData[8].type" :duotou="panData[8].duoTou" :kongtou="panData[8].kongTou"></EcoBox>
-        <EcoBox :name="panData[9].type" :duotou="panData[9].duoTou" :kongtou="panData[9].kongTou"></EcoBox>
-        <EcoBox :name="panData[10].type" :duotou="panData[10].duoTou" :kongtou="panData[10].kongTou"></EcoBox>
-        <EcoBox :name="panData[11].type" :duotou="panData[11].duoTou" :kongtou="panData[11].kongTou"></EcoBox>
-        <EcoBox :name="panData[12].type" :duotou="panData[12].duoTou" :kongtou="panData[12].kongTou"></EcoBox>
+        <EcoBox :name="panData[7].type" :duotou="panData[7].duoTou" :kongtou="panData[7].kongTou" :imgUrl="panData[7].path"></EcoBox>
+        <EcoBox :name="panData[8].type" :duotou="panData[8].duoTou" :kongtou="panData[8].kongTou" :imgUrl="panData[8].path"></EcoBox>
+        <EcoBox :name="panData[9].type" :duotou="panData[9].duoTou" :kongtou="panData[9].kongTou" :imgUrl="panData[9].path"></EcoBox>
+        <EcoBox :name="panData[10].type" :duotou="panData[10].duoTou" :kongtou="panData[10].kongTou" :imgUrl="panData[10].path"></EcoBox>
+        <EcoBox :name="panData[11].type" :duotou="panData[11].duoTou" :kongtou="panData[11].kongTou" :imgUrl="panData[11].path"></EcoBox>
+        <EcoBox :name="panData[12].type" :duotou="panData[12].duoTou" :kongtou="panData[12].kongTou" :imgUrl="panData[12].path"></EcoBox>
       </div>
     </div>
     <div class="ecoBox">

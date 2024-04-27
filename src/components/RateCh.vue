@@ -11,7 +11,7 @@
 <script>
 import axios from 'axios'
 export default {
-  props: ['radio', 'selectedSymbol'],
+  props: ['radio', 'selectedSymbol', 'state'],
 
   data () {
     return {
@@ -44,14 +44,7 @@ export default {
     }
   },
   computed: {
-    state: {
-      get () {
-        return this.defaultState
-      },
-      set (value) {
-        this.defaultState = value
-      }
-    },
+
     name: {
       get () {
         return this.defaultName
@@ -131,8 +124,10 @@ export default {
           console.log(res.data)
           this.rawData = res.data.data
           this.splitData(this.rawData)
+
           if (res.data.weekend === true) {
-            this.state = '停盘中'
+            this.$emit('state', '停盘中')
+            console.log(this.state)
           }
         }
       } catch (error) {

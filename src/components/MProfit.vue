@@ -187,7 +187,7 @@ export default {
 
           grid: [{
             show: false,
-            left: '2%',
+            left: '0%',
             top: 30,
             bottom: 50,
 

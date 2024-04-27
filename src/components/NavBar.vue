@@ -174,7 +174,7 @@ export default {
     width:2rem;
     height:0.3rem;
     font-size:0.07rem;
-    transform:translateX(-0.4rem);
+    transform:translateX(-0.7rem);
     .dong{
       margin-top:0.03rem;
     }

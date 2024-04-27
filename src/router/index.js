@@ -1,22 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import WinPage from '@/views/WinPage'
-import ProfitPage from '@/views/ProfitPage'
-import DatePage from '@/views/DatePage'
-import FollowPage from '@/views/FollowPage'
-import MapPage from '@/views/MapPage'
-import HomePage from '@/views/HomePage'
-import PreView from '@/views/PreView'
-import NowRate from '@/views/NowRate'
-import NavBar from '@/views/NavBar'
-import NowNews from '@/views/NowNews'
-import RateTime from '@/views/RateTime.vue'
-import EcoIndex from '@/views/EcoIndex'
-import BaiKe from '@/views/BaiKe.vue'
-import KData from '@/views/KData.vue'
-import AgriMei from '@/views/AgriMei.vue'
-import GdpMei from '@/views/GdpMei.vue'
-import QuesTi from '@/views/QuesTi.vue'
+
 Vue.use(VueRouter)
 const routes = [
   {
@@ -25,73 +9,73 @@ const routes = [
   },
   {
     path: '/NavBar',
-    component: NavBar
+    component: (resolve) => require(['@/views/NavBar'], resolve)
   },
   {
     path: '/EcoIndex',
-    component: EcoIndex
+    component: (resolve) => require(['@/views/EcoIndex'], resolve)
   },
   {
     path: '/QuesTi',
-    component: QuesTi
+    component: resolve => require(['@/views/QuesTi.vue'], resolve)
   },
   {
     path: '/BaiKe',
-    component: BaiKe
+    component: resolve => require(['@/views/BaiKe.vue'], resolve)
   },
   {
     path: '/NowNews',
-    component: NowNews
+    component: resolve => require(['@/views/NowNews'], resolve)
   },
   {
     path: '/NowRate',
-    component: NowRate
+    component: resolve => require(['@/views/NowRate'], resolve)
   },
   {
     path: '/PreView',
-    component: PreView
+    component: resolve => require(['@/views/PreView'], resolve)
   },
 
   {
     path: '/HomePage',
-    component: HomePage
+    component: resolve => require(['@/views/HomePage'], resolve)
   },
   {
     path: '/WinPage',
-    component: WinPage
+    component: resolve => require(['@/views/WinPage'], resolve)
   },
   {
     path: '/ProfitPage',
-    component: ProfitPage
+    component: resolve => require(['@/views/ProfitPage'], resolve)
   },
 
   {
     path: '/DatePage',
-    component: DatePage
+    component: resolve => require(['@/views/DatePage'], resolve)
   },
   {
     path: '/FollowPage',
-    component: FollowPage
+    component: resolve => require(['@/views/FollowPage'], resolve)
   },
   {
     path: '/MapPage',
-    component: MapPage
+    component: resolve => require(['@/views/MapPage'], resolve)
   },
   {
     path: '/RateTime',
-    component: RateTime
+    component: resolve => require(['@/views/RateTime.vue'], resolve)
   },
   {
     path: '/KData',
-    component: KData
+    component: resolve => require(['@/views/KData.vue'], resolve)
   },
   {
     path: '/agri',
-    component: AgriMei
+    component: resolve => require(['@/views/AgriMei.vue'], resolve)
   },
   {
     path: '/gdp',
-    component: GdpMei
+    component: resolve => require(['@/views/GdpMei.vue'], resolve)
   }
 ]
 const router = new VueRouter({

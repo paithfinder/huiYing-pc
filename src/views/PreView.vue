@@ -13,7 +13,7 @@
     </div>
     <div class="enter" @click="show=true">
       <img src="static/img/preview/next.png" alt="">
-      <el-button type="text" @click="open">点我进入</el-button>
+      <el-button type="text" @click="open">点我进入</el-button> \
     </div>
 
 </div>
@@ -42,7 +42,7 @@ export default {
         customClass: 'custom-confirm-dialog' // 添加自定义类名
 
       }).then(() => {
-        this.$router.push('/QuesTi')
+        this.$router.push('/DengLu')
       }).catch(() => {
 
       })

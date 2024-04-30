@@ -100,7 +100,7 @@
           align="center">
           <template slot-scope="scope">
       <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
-        {{ scope.row.gongu }}
+        {{ scope.row.gongBu }}
       </div>
     </template>
       </el-table-column>

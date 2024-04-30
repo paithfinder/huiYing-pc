@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="logo">
         <img src="/static/img/preview/logo透明.png" alt="">
-        <div class="main">
+        <div class="main" v-show="showTi">
             <div class="pro">
                 <el-progress :percentage="percentage" :stroke-width="26" :show-text="false" class="gradient-color"></el-progress>
                 <i class="el-icon-timer" style="color:#7d86ac;transform: translateX(1.35rem) translateY(-120%)  scale(1.7);"></i>
@@ -46,6 +46,7 @@ export default {
       radio: '',
       sumStr: '',
       type: '',
+      showTi: false,
       baseUrl: '/user/userType/',
       titleList: [
         { id: 1, title: '你进行外汇交易的主要目标是', A: '稳定增长资金', B: '快速获取高额利润', C: '保护资本并规避风险', D: '寻找长期投资机会' },
@@ -148,6 +149,7 @@ export default {
         width:3rem;
         height:3rem;
         margin:0 auto;
+        animation: slideIn 2s forwards;
         .pro{
             width:100%;
             height:0.25rem;
@@ -197,10 +199,23 @@ export default {
         }
     }
 }
-
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0rem);
+    opacity: 1;
+  }
+}
 </style>
 <style lang="less">
-.msg{
+
+  .msg{
   width:50%;
   height:40%;
   background-color: #989cad;
@@ -231,8 +246,6 @@ export default {
       }
 
     }
-
-  }
   .el-message-box__btns{
     padding:0.1rem 0.05rem;
     .el-button{
@@ -242,10 +255,12 @@ export default {
     }
   }
 }
+}
  @keyframes siz {
 
             from{width: 0;}
-            to{width: 100%;}
+            to{width: 50%;}
 
         }
+
 </style>

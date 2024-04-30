@@ -16,8 +16,8 @@ const routes = [
     component: (resolve) => require(['@/views/EcoIndex'], resolve)
   },
   {
-    path: '/QuesTi',
-    component: resolve => require(['@/views/QuesTi.vue'], resolve)
+    path: '/DengLu',
+    component: resolve => require(['@/views/DengLu.vue'], resolve)
   },
   {
     path: '/BaiKe',

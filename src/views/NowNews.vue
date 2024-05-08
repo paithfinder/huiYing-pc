@@ -1,5 +1,6 @@
 <template>
   <div class="wrap">
+
         <NavBar id="a"></NavBar>
        <div class="cal">
             <div class="title">
@@ -314,73 +315,71 @@ export default {
     },
     updateDate () {
       const one = this.weekList.find(item => item.wkName === this.selectedWkName)
+      const baseDate = new Date(this.weekList[one.id - 1].dateName)
+
       // 更新selected前面的
       for (let i = 0; i < one.id - 1; i++) {
-        // console.log(this.weekList[i].dateName)
-        const baseDate = this.weekList[one.id - 1].dateName.split('/') // 选中日期的前一天
-        const newDay = parseInt(baseDate[1], 10) - (one.id - 1 - i)
-        const newDate = `${baseDate[0]}/${newDay < 10 ? '0' + newDay : newDay}` // 递减日期
-        this.weekList[i].dateName = newDate
+        const date = new Date(baseDate)
+        date.setDate(date.getDate() - (one.id - 1 - i))
+        this.weekList[i].dateName = this.formatDate(date)
       }
+
       // 更新selected后面的
       for (let i = one.id; i < this.weekList.length; i++) {
-        // console.log(this.weekList[i].dateName)
-        const baseDate = this.weekList[one.id - 1].dateName.split('/') // 选中日期
-        const newDay = parseInt(baseDate[1], 10) + (i - one.id + 1)
-        const newDate = `${baseDate[0]}/${newDay < 10 ? '0' + newDay : newDay}` // 递增日期
-        this.weekList[i].dateName = newDate
+        const date = new Date(baseDate)
+        date.setDate(date.getDate() + (i - one.id + 1))
+        this.weekList[i].dateName = this.formatDate(date)
       }
+
       this.updateLast()
       this.updateNext()
     },
+
     updateLast () {
-      const lastWeekList = []
-      for (let i = 0; i < this.weekList.length; i++) {
-        const currentDate = this.weekList[i].dateName
-        const [month, day] = currentDate.split('/').map(Number)
-        const lastWeekDay = day - 7
-        let lastMonth = month
-        let lastDay = lastWeekDay
-        if (lastWeekDay < 1) {
-          lastMonth -= 1
-          lastDay += 31 // 假设上个月有31天
+      const lastWeekList = this.weekList.map(item => {
+        const date = new Date(item.dateName)
+        date.setDate(date.getDate() - 7)
+        return {
+          ...item,
+          dateName: this.formatDate(date)
         }
-        lastWeekList.push({
-          id: this.weekList[i].id,
-          wkName: this.weekList[i].wkName,
-          dateName: `${lastMonth.toString().padStart(2, '0')}/${lastDay.toString().padStart(2, '0')}`
-        })
-      }
+      })
+
       console.log(lastWeekList)
-      // 返回上周的日历信息
       return lastWeekList
     },
+
     updateNext () {
-      const nextWeekList = []
-      for (let i = 0; i < this.weekList.length; i++) {
-        const currentDate = this.weekList[i].dateName
-        const [month, day] = currentDate.split('/').map(Number)
-        const nextWeekDay = day + 7
-        let nextMonth = month
-        let nextDay = nextWeekDay
-        // 假设每个月最多31天，超过31天则进入下个月
-        if (nextWeekDay > 31) {
-          nextMonth += 1
-          nextDay -= 31
+      const nextWeekList = this.weekList.map(item => {
+        const date = new Date(item.dateName)
+        date.setDate(date.getDate() + 7)
+        return {
+          ...item,
+          dateName: this.formatDate(date)
         }
-        nextWeekList.push({
-          id: this.weekList[i].id,
-          wkName: this.weekList[i].wkName,
-          dateName: `${nextMonth.toString().padStart(2, '0')}/${nextDay.toString().padStart(2, '0')}`
-        })
-      }
+      })
+
       console.log(nextWeekList)
       return nextWeekList
+    },
+    formatDate (date) {
+      return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`
+    },
+
+    // 辅助函数，获取某个月份的最后一天
+    getLastDayOfMonth (month) {
+      const february = (year) => ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 29 : 28
+      const daysInMonth = [31, february(new Date().getFullYear()), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+      return daysInMonth[month - 1]
     },
 
     async getEco () {
       try {
-        const res = await axios.get(this.ecoUrl)
+        const res = await axios.get(this.ecoUrl, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         console.log(res.data.data)
         if (res.data.data !== null) {
           console.log(res.data.data)
@@ -392,7 +391,11 @@ export default {
     },
     async getEvent () {
       try {
-        const res = await axios.get(this.eventUrl)
+        const res = await axios.get(this.eventUrl, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         // console.log(res)
         if (res.data.data !== null) {
           console.log(res.data.data)
@@ -416,7 +419,15 @@ export default {
 .wrap{
     width:100%;
     overflow-y:scroll;
-    background-color: #eceff7;
+    background-color: #132850;
+    #bgmp{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    }
     .box{
       position:sticky;
       top:0;
@@ -523,7 +534,6 @@ export default {
 
         .head{
             width:97%;
-
             margin:0 auto;
             padding-top:0.1rem;
             box-sizing: border-box;

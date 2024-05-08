@@ -118,7 +118,11 @@ export default {
     },
     async getData () {
       try {
-        const res = await axios.get(this.baseUrl + '/' + this.name + '/' + this.button)
+        const res = await axios.get(this.baseUrl + '/' + this.name + '/' + this.button, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         console.log(res.data)
         if (res.data.data !== null) {
           console.log(res.data)

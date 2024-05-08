@@ -94,7 +94,11 @@ export default {
     // 获取数据
     async getData () {
       try {
-        const res = await axios.get(this.baseUrl + this.name)
+        const res = await axios.get(this.baseUrl + this.name, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
           console.log(res.data)
           // 直接赋值可能不会触发响应式更新，可以使用 Vue.set 或其他方法

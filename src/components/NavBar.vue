@@ -1,12 +1,12 @@
 <template>
   <div class="box">
     <div class="top">
-            <div class="head">
+      <div class="head">
         <div class="title">
             汇影镜像交易分析应用平台
     </div>
-    </div>
-    <div class="nav">
+      </div>
+      <div class="nav">
       <el-menu
   :default-active="$store.state.activeIndex"
   class="el-menu-demo"
@@ -30,13 +30,37 @@
  <router-link to="/EcoIndex" style="text-decoration: none;">      <el-menu-item index="4">
  风向指标
   </el-menu-item></router-link>
-  <router-link to="/BaiKe" style="text-decoration: none;">    <el-menu-item index="5">
+   <router-link to="/SelfPage" style="text-decoration: none;">      <el-menu-item index="5">
+ 个人与社区
+  </el-menu-item></router-link>
+  <router-link to="/BaiKe" style="text-decoration: none;">    <el-menu-item index="6">
 汇百科
   </el-menu-item></router-link>
 
       </el-menu>
-    </div>
-    <div class="time">
+      </div>
+      <div class="gongao">
+        <!-- <span style="font-weight: 100;font-size:0.09rem;cursor: pointer;">公告栏</span> -->
+        <el-popover
+  placement="bottom"
+  width="460"
+
+  trigger="hover">
+  <el-table :data="gridData" max-height="250">
+    <el-table-column width="160" property="time" label="时间" align="center"></el-table-column>
+    <el-table-column width="300" property="things" label="事件" ></el-table-column>
+  </el-table>
+
+  <el-button slot="reference" style="background-color: transparent;border:none;color:#fff;font-size:0.08rem">
+
+    公告栏
+    <el-tooltip class="item" effect="light" content="近期较重要的经济或政治事件" placement="right">
+                   <i class="el-icon-question" style="color:#00bed0;transform: scale(1.2);"></i>
+            </el-tooltip>
+  </el-button>
+</el-popover>
+      </div>
+      <div class="time">
       <div class="zhong">北京时间GMT-8:{{ nowTime }}</div>
 
       <div class="dong">北美东部时间GMT-3:{{ eastTriangleTimeStr }}</div>
@@ -49,12 +73,18 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data () {
     return {
       nowTime: '',
       activeIndex: '1',
-      eastTriangleTimeStr: ''
+      eastTriangleTimeStr: '',
+      gridData: [{
+        time: '2016-05-02',
+        things: '王小虎'
+
+      }]
 
     }
   },
@@ -64,6 +94,7 @@ export default {
   },
   mounted () {
     this.nowTimes()
+    this.getData()
   },
 
   beforeDestroy () {
@@ -100,6 +131,8 @@ export default {
 
       // 格式化北京时间
       this.nowTime = year + '年' + month + '月' + date + '日' + ' ' + hh + ':' + mm + ':' + ss + ' ' + getWeek
+      const t = year + '-' + month + '-' + date + ' ' + hh + ':' + mm + ':' + ss
+      this.$store.commit('changeLauch', t)
     }, // 实时刷新当前时间，格式化
     nowTimes () {
       this.timeFormate(new Date())
@@ -113,8 +146,19 @@ export default {
     handleSelect (index, indexPath) {
       console.log(index)
       this.$store.dispatch('indexChange', index)
-    }
+    },
+    async getData () {
+      try {
+        const res = await axios.get('/eventNews/getImportantNews')
 
+        if (res.data.data !== null) {
+          console.log(res.data)
+          this.gridData = res.data.data
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 
 }
@@ -145,7 +189,19 @@ export default {
         font-size:0.105rem;
         font-weight: bold;
 
+      }
+
     }
+    .gongao{
+      position:absolute;
+      z-index:4;
+      color:#fff;
+      height:0.4rem;
+      line-height:0.4rem;
+      width:10%;
+      text-align: center;
+      transform: translateX(1.25rem);
+      // background-color: red;
     }
     .nav{
       position:absolute;
@@ -174,7 +230,7 @@ export default {
     width:2rem;
     height:0.3rem;
     font-size:0.07rem;
-    transform:translateX(-0.7rem);
+    transform:translateX(-0.4rem);
     .dong{
       margin-top:0.03rem;
     }
@@ -184,5 +240,46 @@ export default {
    }
     }
 
+}
+</style>
+<style>
+
+.el-table th, .el-table tr, .el-table__expanded-cell{
+    background-color: rgba(37, 75, 139) !important;
+}
+.el-table,.el-table__empty-text{
+    color: #55b4f8 !important;
+}
+.el-table{
+  background-color: rgb(54, 86, 150) !important;
+}
+.el-table th{
+  color:#fff !important;
+}
+
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: rgb(113, 90, 90) !important;
+}
+.el-table thead{
+    color: #58BAFF !important;
+}
+.el-table:before{
+    background-color: #4094DE !important;
+}
+.el-table td, .el-table th.is-leaf{
+    border-bottom: 1px solid #0095F4 !important;
+}
+.el-descriptions__body {
+  background-color: rgba(28, 62, 121) !important;
+
+}
+.el-descriptions-item__label{
+    color:#fff
+  }
+  .el-descriptions-item__content{
+    color:#fff;
+  }
+::v-deep .el-table__body tr.current-row > td.el-table__cell {
+  background-color: rgba(164, 37, 37, 0.3) !important;
 }
 </style>

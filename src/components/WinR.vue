@@ -62,7 +62,11 @@ export default {
     // 获取数据
     async getData () {
       try {
-        const res = await axios.get(this.baseUrl + this.time)
+        const res = await axios.get(this.baseUrl + this.time, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data.data !== null) {
           console.log(res.data)
           // 直接赋值可能不会触发响应式更新，可以使用 Vue.set 或其他方法
@@ -111,13 +115,20 @@ export default {
             center: ['50%', '50%'],
             data: this.winData.sort(function (a, b) {
               return a.value - b.value
-            }).map(item => ({
+            }).map((item, index) => ({
               value: item.value,
               name: item.name,
               itemStyle: {
-                color: '#bf444c',
-                shadowBlur: 200,
-                shadowColor: 'rgba(0, 0, 0)'
+                color: [
+                  '#aa0000',
+                  '#cc6600',
+                  '#bbbb00',
+                  '#00aa00',
+                  '#00aaaa',
+                  '#0000aa',
+                  '#66009d',
+                  '#4682b4'
+                ][index % 8] // 示例颜色数组
               }
             })),
 

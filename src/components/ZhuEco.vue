@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="w">
     <div class="chart" ref="zhu">
         我是概率图
     </div>
@@ -32,7 +32,11 @@ export default {
     // 获取数据
     async getData () {
       try {
-        const res = await axios.get('/NOFarmPopulation/getNOFarmPopulation')
+        const res = await axios.get('/NOFarmPopulation/getNOFarmPopulation', {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
           console.log(res.data.data)
           // 直接赋值可能不会触发响应式更新，可以使用 Vue.set 或其他方法
@@ -205,5 +209,8 @@ export default {
 </script>
 
 <style>
-
+.w{
+  width:100%;
+  height:100%;
+}
 </style>

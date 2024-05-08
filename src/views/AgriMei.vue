@@ -66,7 +66,11 @@ export default {
   methods: {
     async getTable () {
       try {
-        const res = await axios.get('/NOFarmPopulation/getNOFarmPopulation')
+        const res = await axios.get('/NOFarmPopulation/getNOFarmPopulation', {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
           console.log(res.data.data)
           // 直接赋值可能不会触发响应式更新，可以使用 Vue.set 或其他方法

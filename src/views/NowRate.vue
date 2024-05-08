@@ -106,7 +106,7 @@
             <div class="bottom" >
                 <el-descriptions title="盘口数据" style="font-size: 10px;color:#fff" >
                     <el-descriptions-item label="今开" >{{  capData.openToday }}</el-descriptions-item>
-                    <el-descriptions-item label="最高" contentStyle="color:red;">{{ capData?.highToday }}</el-descriptions-item>
+                    <el-descriptions-item label="最高" >{{ capData?.highToday }}</el-descriptions-item>
                     <el-descriptions-item label="最大交易量">{{ capData?.tickVolMax }}</el-descriptions-item>
                     <el-descriptions-item label="昨收">{{ capData?.closeYesterday }}</el-descriptions-item>
                     <el-descriptions-item label="最低">{{ capData?.lowToday }}</el-descriptions-item>
@@ -127,7 +127,51 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <div style="color:red;transform:translate(5.5rem,0.1rem);font-weight:bold ">{{  state }} </div>
+                        <div style="color:red;transform:translate(5.4rem,0.1rem);font-weight:bold ">{{  state }} </div>
+                        <!-- 模拟交易 -->
+                         <el-button type="text"  @click="openModal" style="background-color: #d5e2fd;padding:0.05rem;transform:translate(5rem,-0.1rem)">模拟交易</el-button>
+                          <div class="modal" v-if="showModal">
+                            <div class="modal-content">
+                              <span class="close" @click="closeModal">&times;</span>
+                              <h2 style="color:#edf1f9">模拟交易</h2>
+                              <div class="formBox" >
+                                  <!-- 交易量 -->
+                                  <div class='shuru' style="display:flex;align-items: center;">
+                                    <div style="color:#fff;width:0.5rem;font-size:0.08rem;">交易品种:</div>
+                                  <el-select size="mini" v-model="value" placeholder="请选择" style="width:80%">
+                                    <el-option
+                                      v-for="item in options"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                                  </div>
+                                  <div class='shuru' style="display:flex;align-items: center;">
+                                    <div style="color:#fff;width:0.5rem;font-size:0.08rem;">交易量:</div>
+                                    <el-input-number size="mini" v-model="num" :min="5000" style="width:80%"></el-input-number>
+                                  </div>
+                                  <div class='shuru' style="display:flex;align-items: center;">
+                                    <div style="display:flex;align-items: center;">
+                                      <div style="color:#fff;width:0.4rem;font-size:0.08rem;">止损:</div>
+                                      <el-input size="mini" v-model="form.name" style="width:60%"></el-input>
+                                    </div>
+                                    <div style="display:flex;align-items: center;">
+                                      <div style="color:#fff;width:0.5rem;font-size:0.08rem;">止盈:</div>
+                                      <el-input size="mini" v-model="form.name" style="width:60%"></el-input>
+                                    </div>
+                                  </div>
+                                  <div class="dibu">
+                                    <div style="display:flex;justify-content: space-between;">
+                                      <el-button @click="changeMai" type="danger" style="width:40%">卖出</el-button>
+                                      <el-button @click="changeMai" type="primary" style="width:40%">买入</el-button>
+                                    </div>
+                                      <el-button type="success" style="width:100%;margin-top:0.1rem" v-if="mai">平仓</el-button>
+                                  </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                     <div class="three">
                         <img v-show="unfold" src="/static/img/rate/折叠.png" alt="" @click="left" >
@@ -178,7 +222,10 @@ export default {
 
   data () {
     return {
+      mai: false,
+      showModal: false,
       nowTime: '',
+      num: 5000,
       coinData: [],
       kData: [],
       mapData: [],
@@ -260,7 +307,29 @@ export default {
         { symbol: 'USDCAD', chinese_name: '美元/加元' },
         { symbol: 'USDCHF', chinese_name: '美元/瑞士法郎' },
         { symbol: 'USDJPY', chinese_name: '美元/日元' }
-      ]
+      ],
+      form: {
+        name: ''
+
+      },
+      options: [{
+        value: 'USDJPY',
+        label: 'USDJPY'
+      }, {
+        value: 'USDCHF',
+        label: 'USDCHF'
+      }, {
+        value: 'USDCAD',
+        label: 'USDCAD'
+      }, {
+        value: 'GBPUSD',
+        label: 'GBPUSD'
+      }, {
+        value: 'EURUSD',
+        label: 'EURUSD'
+      }],
+      value: ''
+
     }
   },
   computed: {
@@ -281,6 +350,25 @@ export default {
     }
   },
   methods: {
+    changeMai () {
+      this.mai = true
+      sessionStorage.setItem('mai', JSON.stringify(this.mai))
+    },
+    openModal () {
+      this.showModal = true
+    },
+    closeModal () {
+      this.showModal = false
+    },
+    submitForm () {
+      // 处理提交逻辑
+      this.$message({
+        type: 'success',
+        message: '提交成功，选项是: ' + this.selectedOption
+      })
+      this.$msgbox.close()
+    },
+
     anchor (anchorName) {
     /* 找到锚点 */
       const anchorElement = document.getElementById(anchorName)
@@ -333,7 +421,11 @@ export default {
     // 上方的表
     async getTable () {
       try {
-        const res = await axios.get('/jinChart/getJinChart')
+        const res = await axios.get('/jinChart/getJinChart', {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         console.log(res.data)
         console.log('aababb')
         if (res.data.data !== null) {
@@ -348,7 +440,11 @@ export default {
     // 左上角表
     async getCoin () {
       try {
-        const res = await axios.get('/currencyExchangeForms/getCurrencyExchangeFormsData')
+        const res = await axios.get('/currencyExchangeForms/getCurrencyExchangeFormsData', {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         // console.log(res)
         if (res.data !== null) {
           res.data[0].rowStyle = { isFirstRow: true }
@@ -366,7 +462,11 @@ export default {
     // 盘口数据
     async getCap () {
       try {
-        const res = await axios.get(this.panUrl)
+        const res = await axios.get(this.panUrl, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         console.log(res.data)
         if (res.data.data !== null) {
           // console.log(res.data.data)
@@ -385,6 +485,7 @@ export default {
   mounted () {
     this.getTable()
     this.getCoin()
+    this.mai = JSON.parse(sessionStorage.getItem('mai'))
   },
   created () {
     this.getCap()
@@ -521,6 +622,51 @@ export default {
                 .two{
                     margin-top:0.02rem;
                     color:grey;
+                    .modal {
+                      position: fixed;
+                      z-index: 1;
+                      left: 0;
+                      top: 0;
+                      width: 100%;
+                      height: 100%;
+                      background-color: rgba(0,0,0,0.5);
+                      .modal-content {
+                        background-color: #fefefe;
+                        border-radius:0.1rem;
+                        margin: 15% auto;
+                        padding: 20px;
+                        border: 1px solid #888;
+                        width: 30%;
+                        text-align: center;
+                       background-image: linear-gradient(to bottom, #7a87a2, #01335f);
+                        .formBox{
+                          .shuru{
+                            margin-top:0.05rem;
+                            background-color: rgba(110, 199, 192, 0.408);
+                            height:0.3rem;
+                            border-radius:0.03rem;
+                          }
+                          .dibu{
+                            margin-top:0.3rem;
+                          }
+                        }
+                        h2{
+                          color:#01335f
+                        }
+                        .close {
+                            color: #aaa;
+                            float: right;
+                            font-size: 28px;
+                            font-weight: bold;
+                          }
+                          .close:hover,
+                          .close:focus {
+                            color: black;
+                            text-decoration: none;
+                            cursor: pointer;
+                          }
+                      }
+                    }
                 }
                 .three{
                     width:100%;
@@ -624,43 +770,6 @@ ul, li {
   background-color:rgb(83, 229, 88)
 }
 </style>
-<style>
-.el-table th, .el-table tr, .el-table__expanded-cell{
-    background-color: rgba(37, 75, 139) !important;
-}
-.el-table,.el-table__empty-text{
-    color: #55b4f8 !important;
-}
-.el-table{
-  background-color: rgb(54, 86, 150) !important;
-}
-.el-table th{
-  color:#fff !important;
-}
+<style >
 
-.el-table--enable-row-hover .el-table__body tr:hover>td{
-    background-color: rgb(113, 90, 90) !important;
-}
-.el-table thead{
-    color: #58BAFF !important;
-}
-.el-table:before{
-    background-color: #4094DE !important;
-}
-.el-table td, .el-table th.is-leaf{
-    border-bottom: 1px solid #0095F4 !important;
-}
-.el-descriptions__body {
-  background-color: rgba(28, 62, 121) !important;
-
-}
-.el-descriptions-item__label{
-    color:#fff
-  }
-  .el-descriptions-item__content{
-    color:#fff;
-  }
-::v-deep .el-table__body tr.current-row > td.el-table__cell {
-  background-color: rgba(164, 37, 37, 0.3) !important;
-}
 </style>

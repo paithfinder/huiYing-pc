@@ -1,5 +1,8 @@
 <template>
   <div class="wrap">
+        <video autoplay loop muted poster="static/img/home/homebg.mp4" id="bgmp" >
+        <source src="static/img/home/homebg.mp4" type="video/mp4">
+    </video>
       <NavBar></NavBar>
       <div class="eco">
 
@@ -7,7 +10,7 @@
       <div class="title">
         <img src="/static/img/eco/图表-仪表盘.png" alt="" style="width:0.2rem;
           height:0.2rem;">
-        <h3 style="margin:0">投机情绪指数</h3>
+        <h3 style="margin:0;color:#fff">投机情绪指数</h3>
       </div>
       <img src="/static/img/eco/左箭头-.png" alt="" id="left"  @click="pre">
       <img src="/static/img/eco/右箭头.png" alt="" id="right" @click="next">
@@ -39,7 +42,7 @@
     <div class="ecoBox">
         <div class="bar">
           <img src="static/img/eco/chartcolumn.png" alt="">
-          <h3>重要经济指标</h3>
+          <h3 style="color:#fff">重要经济指标</h3>
            <div class="radio" >
             <ul>
                         <li  v-for="(item) in radioList" :key="item.id" @click="active(item.id)"  :class="{ 'highlighted': item.id === selectedId }">
@@ -284,7 +287,11 @@ export default {
     },
     async getPan () {
       try {
-        const res = await axios.get('/KongDuo/getKongDuo')
+        const res = await axios.get('/KongDuo/getKongDuo', {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
           console.log(res.data.data)
           // 直接赋值可能不会触发响应式更新，可以使用 Vue.set 或其他方法
@@ -297,7 +304,11 @@ export default {
     },
     async getBank () {
       try {
-        const res = await axios.get('/Banks/getBanks')
+        const res = await axios.get('/Banks/getBanks', {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
           console.log(res.data.data)
           // 直接赋值可能不会触发响应式更新，可以使用 Vue.set 或其他方法
@@ -342,6 +353,14 @@ export default {
   overflow-y: scroll;
   background-color: #eceff7;
       position: relative;
+      #bgmp{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    }
       .box{
         position:sticky;
         top:0;
@@ -393,11 +412,11 @@ export default {
       cursor:pointer
     }
     .ecoBox{
-
+      overflow: hidden;
       width:90%;
-
-      margin:0 auto;
-           margin-top:0.2rem;
+      position:absolute;
+      left:0.5rem;
+      margin-top:0.2rem;
 
       .bar{
         width:100%;
@@ -432,6 +451,7 @@ export default {
             width:0.8rem;
             text-align: center;
             border-radius:0.06rem;
+            color:#fff;
 
           }
           li:hover{

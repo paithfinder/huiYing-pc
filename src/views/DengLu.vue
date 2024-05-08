@@ -2,7 +2,8 @@
   <div class="wrap">
     <div class="logo">
         <img src="/static/img/preview/logo透明.png" alt="">
-        <div class="main" v-show="showTi">
+    </div>
+    <div class="main" v-if="showTi">
             <div class="pro">
                 <el-progress :percentage="percentage" :stroke-width="26" :show-text="false" class="gradient-color"></el-progress>
                 <i class="el-icon-timer" style="color:#7d86ac;transform: translateX(1.35rem) translateY(-120%)  scale(1.7);"></i>
@@ -31,22 +32,46 @@
     <el-button icon="el-icon-minus" @click="decrease"></el-button>
     <el-button icon="el-icon-plus" @click="increase"></el-button>
   </el-button-group> -->
-        </div>
+    </div>
+      <!-- 登录 -->
+    <div class="login-wrapper" v-if="dengShow">
+            <div class="header">登录</div>
+            <div class="form-wrapper">
+                <input type="text" name="username" placeholder="用户名" class="input-item" v-model="username">
+                <input type="password" name="password" placeholder="密码" class="input-item" v-model="password">
+                <div class="btn" @click="goHome">确定</div>
+            </div>
+            <div class="msg">
+                <div style="cursor: pointer;color:#abc1ef">游客登录</div>
+                <div>没有账号？<a href="#" @click="goZhu">点击注册</a></div>
+
+            </div>
+
+    </div>
+    <div>
+      <img src="/static/img/问卷/插图.png" alt="" style="width:6.5rem;height:4rem;transform: translate(-2.5rem,-2rem);">
+    </div>
+    <div>
+      <img src="/static/img/问卷/插图2.png" alt="" style="width:2.5rem;height:2.5rem;transform:translate(7.6rem,-6.8rem)">
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import $http from '@/utils/request'
 export default {
   data () {
     return {
+      username: '',
+      password: '',
       percentage: 20,
       nowTi: 0,
       radio: '',
       sumStr: '',
       type: '',
       showTi: false,
+      dengShow: true,
       baseUrl: '/user/userType/',
       titleList: [
         { id: 1, title: '你进行外汇交易的主要目标是', A: '稳定增长资金', B: '快速获取高额利润', C: '保护资本并规避风险', D: '寻找长期投资机会' },
@@ -99,9 +124,57 @@ export default {
         })
       }
     },
+    goHome () {
+      this.getDeng()
+      // this.$router.push('/HomePage')
+    },
+    goZhu () {
+      this.$router.push('/ZhuChe')
+    },
+    getDeng () {
+      const that = this
+
+      // 发送POST请求
+      $http.post('/api/user/login', {
+        name: this.username,
+        password: this.password
+      }, {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8' // 设置Content-Type为application/json
+        }
+      })
+        .then(function (response) {
+          // 处理成功情况
+          console.log(response)
+          if (response.success === true) {
+            that.$message({
+              message: '登录成功！',
+              type: 'success'
+            })
+            that.$store.commit('changeToken', response.token)
+            if (response.typeDTO) {
+              that.$store.commit('changeName', response.typeDTO.name)
+              that.$store.commit('changeType', response.typeDTO.type)
+              that.$store.commit('changePath', response.typeDTO.path)
+              that.$store.commit('changeDesc', response.typeDTO.description)
+              that.$router.push('/HomePage') // 使用保存的this引用
+            } else {
+              that.dengShow = false
+              that.showTi = true
+            }
+          } else {
+            console.log(response.message)
+            that.$message.error(response.message)
+          }
+        })
+    },
     async getData () {
       try {
-        const res = await axios.get(this.baseUrl + this.sumStr)
+        const res = await axios.get(this.baseUrl + this.sumStr, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
           console.log(res.data.data)
           console.log(res.data.data.type)
@@ -132,7 +205,7 @@ export default {
 
 <style lang="less" scoped>
 .wrap{
-    background: url("/public/static/img/问卷/问卷.png") no-repeat;
+    background: url("/public/static/img/问卷/背景.png") no-repeat;
     background-size: 100% 100% ;
     .logo{
         width:100%;
@@ -166,7 +239,7 @@ export default {
                     width:2.7rem;
                     }
                     .el-progress-bar__inner {
-                    background: linear-gradient(to right, #b64875, #8822b2);
+                    background: linear-gradient(to right, #409eff, #8822b2);
                     // transform:scale(0.8)
                     }
   }
@@ -198,7 +271,8 @@ export default {
             justify-content: space-between;
         }
     }
-}
+
+  }
 @keyframes slideIn {
   0% {
     transform: translateX(100%);
@@ -208,13 +282,12 @@ export default {
     opacity: 1;
   }
   100% {
-    transform: translateX(0rem);
+    transform: translateX(0);
     opacity: 1;
   }
 }
 </style>
 <style lang="less">
-
   .msg{
   width:50%;
   height:40%;
@@ -242,7 +315,7 @@ export default {
          overflow: hidden;
             white-space: nowrap;
             letter-spacing: 0.15em;
-        animation: siz 2s steps(60) forwards;
+        animation: siz 1.5s steps(60) forwards;
       }
 
     }
@@ -256,10 +329,60 @@ export default {
   }
 }
 }
+.login-wrapper {
+            background-color: #fff;
+            width: 2.3rem;
+            height: 2.5rem;
+            border-radius: 0.1rem;
+            padding: 0 50px;
+            transform:translate(120%,15%);
+            .header {
+            font-size: 0.15rem;
+            font-weight: bold;
+            text-align: center;
+            line-height: 0.8rem;
+            }
+            .form-wrapper{
+              .input-item {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.2rem;
+            border: 0;
+            padding: 0.06rem 0;
+            border-bottom: 1px solid rgb(128, 125, 125);
+            font-size: 0.1rem;
+            outline: none;
+              }
+              .input-item:placeholder {
+            text-transform: uppercase;
+              }
+              .btn {
+            text-align: center;
+            padding: 0.06rem 0;
+            width: 100%;
+            margin-top: 0.3rem;
+            background-image: linear-gradient(to right, #afc6ed, #0840c0);
+            color: #fff;
+            cursor: pointer;
+        }
+            }
+            .msg {
+            display:flex;
+            justify-content: space-between;
+            width:100%;
+            text-align: center;
+            line-height: 0.5rem;
+            background-color: transparent ;
+            a {
+            text-decoration-line: none;
+            color: #abc1ee;
+            }
+          }
+        }
  @keyframes siz {
 
             from{width: 0;}
-            to{width: 50%;}
+            to{width: -50%;}
 
         }
 

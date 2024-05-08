@@ -63,7 +63,7 @@
                 </div>
                 <div class="textBox">
 
-                  <el-dropdown @command="handleCommand">
+                  <el-dropdown @command="handleCommand" v-if="single">
   <span class="el-dropdown-link" style="font-size:0.1rem">
     {{ selectedValue }}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
@@ -72,23 +72,26 @@
 
   </el-dropdown-menu>
                     </el-dropdown>
-
+                    <span style="color:#00ffff;padding:0.04rem" v-if="double">{{ $store.state.name[0] }} vs {{ $store.state.name[1] }}</span>
                   <span style="color:white;font-size: 0.09rem;font-weight:bold;">出手概率</span>
                   <el-tooltip class="item" effect="light" content="实时预测信号源此时刻会出手(交易)的概率" placement="right">
                    <i class="el-icon-question" style="color:#00bed0;transform: scale(1);transform:translate(20%,10%)"></i>
             </el-tooltip>
                   <div class="time" style="margin:0;width:1.2rem;transform: translate(2.4rem,-0.11rem);">最近更新时间:{{ gengxin }}</div>
 
-                  <div class="ku">{{ pinlv }}%</div>
+                  <div class="ku" v-if="single">{{ pinlv }}%</div>
+                  <div class="ku" v-if="double">{{ pro1 }} vs {{ pro2 }}</div>
                   <div id="expand">
-                    <!-- <i class="el-icon-full-screen" @click="expand(3)"></i> -->
+                    <el-tooltip style="display:flex;transform:translate(3.3rem,-0.45rem);align-items: center;margin-top:0.05rem;" effect="light" content="实时预测信号源此时刻会出手(交易)的概率">
+                      <img src="/static/img/home/切换.png" alt="" style="width:0.15rem;height:0.15rem;margin-left:0.03rem" @click="qiehuan">
+                    </el-tooltip>
                   </div>
                 </div>
                 <div class="chart">
-            <TradeRate :selectedValue="selectedValue" :gengxin="gengxin" :pinlv="pinlv" @gengpin="handleChild"></TradeRate>
-
+            <TradeRate :selectedValue="selectedValue" :gengxin="gengxin" :pinlv="pinlv" @gengpin="handleChild" v-if="single"></TradeRate>
+            <DoubleZhe  :gengxin="gengxin" :pro1="pro1" :pro2="pro2" @pro1="handlePro1" @pro2="handlePro2" v-if="double"></DoubleZhe>
           </div>
-            <div style="width:100%;height:0.09rem;text-align: center;"><span style="color:#fff;font-size:0.08rem;">先前预测概率</span></div>
+            <div style="width:100%;height:0.09rem;text-align: center;margin-top:0.03rem"><span style="color:#fff;font-size:0.08rem;">先前预测概率</span></div>
         </div>
            <div class="panel pro">
               <div class="big">
@@ -163,7 +166,7 @@ import TradeRate from '@/components/TradeRate'
 import MProfit from '@/components/MProfit'
 import WinR from '@/components/WinR'
 import NavBar from '@/components/NavBar.vue'
-
+import DoubleZhe from '@/components/DoubleZhe'
 export default {
   components: {
     WinR,
@@ -172,12 +175,15 @@ export default {
     NumFo,
     TradeRate,
     MProfit,
-    NavBar
+    NavBar,
+    DoubleZhe
 
   },
   data () {
     return {
       myShow: false,
+      single: false,
+      double: true,
       winData: '',
       valueWin: '近一周',
       valueRili: 'Alexander Pavlenko',
@@ -228,7 +234,9 @@ export default {
         { id: 6, name: 'Anteno Harpa' },
         { id: 7, name: 'Ady Suyoko' },
         { id: 8, name: 'Michaela Kreindl' }
-      ]
+      ],
+      pro1: '11',
+      pro2: '22'
 
     }
   },
@@ -247,9 +255,20 @@ export default {
       // 处理未找到对应id的页面逻辑
       }
     },
+    qiehuan () {
+      this.single = !this.single
+      this.double = !this.double
+    },
     handleChild (geng, pin) {
       this.gengxin = geng
       this.pinlv = pin
+    },
+    handlePro1 (geng, pro1) {
+      this.gengxin = geng
+      this.pro1 = pro1
+    },
+    handlePro2 (pro2) {
+      this.pro2 = pro2
     },
     handleCommand (command) {
       this.selectedValue = command.name
@@ -375,7 +394,7 @@ export default {
               }
               }
               .textBox{
-                height:50%;
+
                 margin-top:0.1rem;
                   // background-color: rgba(109, 161, 218,0.5);
                 // background-color: red;
@@ -392,18 +411,18 @@ export default {
                 .ku{
                   margin:0 auto;
                   // background-color: #d26460;
-                  font-size:0.5rem;
+                  font-size:0.3rem;
                   text-shadow:
                   1px 1px rgba(170, 207, 243, 0.8),
                   2px 2px rgba(170, 207, 243, 0.8),
                   3px 3px rgba(170, 207, 243, 0.8),
-                  4px 4px rgba(170, 207, 243, 0.8),
-                  5px 5px rgba(170, 207, 243, 0.8),
-                  6px 6px rgba(170, 207, 243, 0.8);
+                  3px 3px rgba(170, 207, 243, 0.8),
+                  3px 3px rgba(170, 207, 243, 0.8),
+                  3px 3px rgba(170, 207, 243, 0.8);
 
                   text-align: center;
                   color:#00ffff;
-                  height:0.6rem;
+                  height:0.3rem;
 
                 }
                 .time{
@@ -423,7 +442,9 @@ export default {
                 }
               }
               .chart{
-                height:33% !important;
+                height:45% !important;
+
+                margin-top:0 !important;
 
               }
           }

@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <NavBar></NavBar>
+    <NavBar style="background-color: rgba(1, 51, 95)"></NavBar>
     <div class="baike">
        <div class="menu">
         <el-row class="tac">
@@ -800,6 +800,8 @@ export default {
     overflow-y:scroll;
     padding:0 0.5rem;
     box-sizing: border-box;
+    background-color:rgba(1, 24, 69);
+    color:#fff
   }
   }
   // position:relative;

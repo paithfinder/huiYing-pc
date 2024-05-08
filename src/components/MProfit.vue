@@ -87,7 +87,11 @@ export default {
     // 获取数据
     async getData () {
       try {
-        const res = await axios.get(this.baseUrl + this.time)
+        const res = await axios.get(this.baseUrl + this.time, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
           console.log(res.data)
           const data = res.data
@@ -187,12 +191,11 @@ export default {
 
           grid: [{
             show: false,
-            left: '0%',
+            left: '5%',
             top: 30,
             bottom: 50,
-
             containLabel: true,
-            width: '40%'
+            width: '35%'
 
           }, {
             show: false,
@@ -202,11 +205,11 @@ export default {
             width: '0%'
           }, {
             show: false,
-            right: '2%',
+            right: '5%',
             top: 30,
             bottom: 50,
             containLabel: true,
-            width: '40%'
+            width: '35%'
 
           }],
 
@@ -224,8 +227,9 @@ export default {
               axisLabel: {
                 show: true,
                 textStyle: {
-                  color: '#fff',
-                  fontSize: 9
+                  color: '#00bed0',
+                  fontSize: 9,
+                  fontWeight: 'bold'
                 }
               },
               splitLine: {
@@ -252,8 +256,9 @@ export default {
               axisLabel: {
                 show: true,
                 textStyle: {
-                  color: '#fff',
-                  fontSize: 12
+                  color: '#fd3f0a',
+                  fontSize: 8,
+                  fontWeight: 'bold'
                 }
               },
               splitLine: {
@@ -277,10 +282,10 @@ export default {
             },
             axisLabel: {
               show: false,
-              margin: 8,
+
               textStyle: {
-                color: '#fff',
-                fontSize: 12
+                color: '#9D9EA0',
+                fontSize: 1
               }
 
             },
@@ -327,7 +332,7 @@ export default {
               show: false,
               textStyle: {
                 color: '#9D9EA0',
-                fontSize: 12
+                fontSize: 7
               }
 
             },
@@ -349,8 +354,9 @@ export default {
               name: '亏损',
               type: 'bar',
               barGap: 20,
+              xAxisIndex: 0,
+              yAxisIndex: 0,
               barWidth: 10,
-
               label: {
                 normal: {
                   show: false,
@@ -362,7 +368,7 @@ export default {
                   offset: [0, 0],
                   textStyle: {
                     color: '#fff',
-                    fontSize: 10
+                    fontSize: 6
                   }
                 }
               },
@@ -389,7 +395,8 @@ export default {
               label: {
                 normal: {
                   show: false,
-                  fontSize: 9
+                  fontSize: 5
+
                 },
                 emphasis: {
                   show: true,

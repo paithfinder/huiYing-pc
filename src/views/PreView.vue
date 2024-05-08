@@ -7,7 +7,7 @@
     <h1 class="title" >欢迎使用<span>汇影镜像交易分析应用平台</span></h1>
     <div class="descri" style="font-family: 楷体;">
       本平台依托大数据分析<br/><br/>
-      基于权威的汇率交易数据和行为特征<br/><br/>
+      基于真实的汇率交易数据和外汇实时信息<br/><br/>
       为用户提供专业的交易参考服务<br/><br/>
       使其能够从中受益并做出更明智的交易决策<br/>
     </div>
@@ -25,7 +25,9 @@ export default {
 
   data () {
     return {
-      show: false
+      show: false,
+      countdown: 6,
+      canConfirm: false
 
     }
   },
@@ -34,22 +36,65 @@ export default {
   },
   methods: {
     open () {
-      this.$confirm(<div style="color:red;text-align:left;">从事外汇交易有很大的风险，因此,并非所有的投资人都可以做。<br/>在决定踏入外汇交易市场前，请仔细考虑您的投资目的、经验水平以及风险承受能力只要您从事外汇交易，就有可能损失掉您初始投资的一部分或全部。<br/>因此，请不要投资您损失不起的资金您必须对外汇交易可能带来的所有风险有一个清醒的认识，在您有任何疑问的时候，请向独立理财顾问进行咨询。</div>, '声明', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(<div style="color:red;text-align:left;font-family: 微软雅黑体;">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;外汇实盘交易是一种合法且成熟的投资方式，它允许投资者直接在银行或其他金融机构提供的交易平台上买卖实际的货币对。这种交易模式在国内外汇市场中被广泛接受，并为投资者提供了参与全球外汇市场的机会。
+      <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作为您信赖的辅助决策平台，我们致力于提供外汇市场的分析、研究和资讯，帮助您更好地理解市场动态，做出更为明智的投资决策。然而，我们并不直接提供外汇交易服务，也不作为任何交易行为的执行者。
+      <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果您有意参与外汇实盘交易，我们建议您联系各大银行或其他合法金融机构，以获取更具体的交易途径和服务信息。这些机构通常能够提供专业的交易平台、市场分析工具以及客户支持服务，为您的交易之旅保驾护航。
+      <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在探索外汇实盘交易的同时，请务必重视风险管理，了解外汇市场的运作机制，并根据自身情况制定合适的投资策略。记住，投资有风险，交易需谨慎。
+      </div>, '声明', {
+        confirmButtonText: '我已阅读且知晓,确认进入',
+        showCancelButton: false,
         type: 'warning',
         center: true,
-        customClass: 'custom-confirm-dialog' // 添加自定义类名
-
+        customClass: 'custom-confirm-dialog',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm' && !this.canConfirm) {
+            instance.confirmButtonLoading = true
+            done(false) // Prevent closing
+          } else {
+            done()
+          }
+        }
       }).then(() => {
         this.$router.push('/DengLu')
       }).catch(() => {
-
+        // Cancelled or timer not finished
       })
+
+      // Start the countdown
+      this.startCountdown()
+    },
+    startCountdown () {
+      this.canConfirm = false
+      this.countdown = 6
+      const timer = setInterval(() => {
+        this.countdown -= 1
+        if (this.countdown <= 0) {
+          clearInterval(timer)
+          this.canConfirm = true
+          // Enable the confirm button and change the text
+          this.$nextTick(() => {
+            const confirmButton = document.querySelector('.el-message-box__btns .el-button--primary')
+            if (confirmButton) {
+              confirmButton.disabled = false
+              confirmButton.textContent = '我已阅读且知晓,确认进入'
+            }
+          })
+        } else {
+          // Update the confirm button text with the countdown
+          this.$nextTick(() => {
+            const confirmButton = document.querySelector('.el-message-box__btns .el-button--primary')
+            if (confirmButton) {
+              confirmButton.disabled = true
+              confirmButton.textContent = `请阅读 (${this.countdown}) s`
+            }
+          })
+        }
+      }, 1000)
     }
   }
-
 }
+
 </script>
 
 <style lang="less" scoped>
@@ -64,7 +109,6 @@ export default {
     width: 100vw;
     height: 100vh;
     object-fit: cover;
-    filter: blur(4px); /* 添加模糊效果 */
 
   }
   .logo{
@@ -162,4 +206,12 @@ export default {
     color:red !important
   }}
 
+</style>
+
+<style lang="less">
+.custom-confirm-dialog{
+.el-button--small {
+    width:100%
+}
+}
 </style>

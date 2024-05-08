@@ -16,7 +16,10 @@ export default new Vuex.Store({
       type: '',
       path: '',
       desc: '',
-      activeIndex: '1'
+      activeIndex: '1',
+      token: '',
+      selectName: '',
+      lauchTime: ''
     }
   },
   getters: {
@@ -31,6 +34,13 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    changeToken (state, token) {
+      state.token = token
+      console.log(state.token)
+    },
+    changeLauch (state, lauch) {
+      state.lauchTime = lauch
+    },
     changeFlag (state, flag) {
       state.isEnterIn = flag
       console.log(state.isEnterIn)
@@ -56,6 +66,9 @@ export default new Vuex.Store({
     changeDesc (state, desc) {
       state.desc = desc
       console.log(state.desc)
+    },
+    changeSelectedName (state, name) {
+      state.selectName = name
     },
     setActiveIndex (state, index) {
       state.activeIndex = index

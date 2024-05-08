@@ -50,8 +50,13 @@ export default {
     // 获取数据
     async getData () {
       try {
-        const res = await axios.get(this.baseUrl + this.ren)
+        const res = await axios.get(this.baseUrl + this.ren, {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
         if (res.data !== null) {
+          console.log(res.data)
           console.log(res.data.data)
           this.time = res.data.data.data.map(item => item.time)
           this.value = res.data.data.data.map(item => item.value)
@@ -61,6 +66,7 @@ export default {
           console.log(this.time)
           console.log(this.value)
           console.log(this.date)
+          console.log('阿八八八')
           // console.log(this.gengxin)
         }
       } catch (error) {

@@ -129,49 +129,8 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <div style="color:red;transform:translate(5.4rem,0.1rem);font-weight:bold ">{{  state }} </div>
                         <!-- 模拟交易 -->
-                         <el-button type="text"  @click="openModal" style="background-color: #d5e2fd;padding:0.05rem;transform:translate(5rem,-0.1rem)">模拟交易</el-button>
-                          <div class="modal" v-if="showModal">
-                            <div class="modal-content">
-                              <span class="close" @click="closeModal">&times;</span>
-                              <h2 style="color:#edf1f9">模拟交易</h2>
-                              <div class="formBox" >
-                                  <!-- 交易量 -->
-                                  <div class='shuru' style="display:flex;align-items: center;">
-                                    <div style="color:#fff;width:0.5rem;font-size:0.08rem;">交易品种:</div>
-                                  <el-select size="mini" v-model="value" placeholder="请选择" style="width:80%">
-                                    <el-option
-                                      v-for="item in options"
-                                      :key="item.value"
-                                      :label="item.label"
-                                      :value="item.value">
-                                    </el-option>
-                                  </el-select>
-                                  </div>
-                                  <div class='shuru' style="display:flex;align-items: center;">
-                                    <div style="color:#fff;width:0.5rem;font-size:0.08rem;">交易量:</div>
-                                    <el-input-number size="mini" v-model="num" :min="5000" style="width:80%"></el-input-number>
-                                  </div>
-                                  <div class='shuru' style="display:flex;align-items: center;">
-                                    <div style="display:flex;align-items: center;">
-                                      <div style="color:#fff;width:0.4rem;font-size:0.08rem;">止损:</div>
-                                      <el-input size="mini" v-model="form.name" style="width:60%"></el-input>
-                                    </div>
-                                    <div style="display:flex;align-items: center;">
-                                      <div style="color:#fff;width:0.5rem;font-size:0.08rem;">止盈:</div>
-                                      <el-input size="mini" v-model="form.name" style="width:60%"></el-input>
-                                    </div>
-                                  </div>
-                                  <div class="dibu">
-                                    <div style="display:flex;justify-content: space-between;">
-                                      <el-button @click="changeMai" type="danger" style="width:40%">卖出</el-button>
-                                      <el-button @click="changeMai" type="primary" style="width:40%">买入</el-button>
-                                    </div>
-                                      <el-button type="success" style="width:100%;margin-top:0.1rem" v-if="mai">平仓</el-button>
-                                  </div>
-                                </div>
-
-                            </div>
-                        </div>
+                         <el-button type="text"  @click="showModel" style="background-color: #d5e2fd;padding:0.05rem;transform:translate(5rem,-0.1rem)">模拟交易</el-button>
+                        <ModelBox :show="show" @changeModel="changeModel"></ModelBox>
                     </div>
                     <div class="three">
                         <img v-show="unfold" src="/static/img/rate/折叠.png" alt="" @click="left" >
@@ -189,7 +148,13 @@
                     </div>
                 </div>
                 <div class="chartContent">
-                    <RateCh :kData="kData" :state="state" @state="getState" :radio="radio" :selectedSymbol="selectedSymbol"></RateCh>
+                    <RateCh
+                    :kData="kData"
+                    :state="state"
+                    @state="getState"
+                     :radio="radio"
+                     :selectedSymbol="selectedSymbol"
+                    ></RateCh>
                 </div>
             </div>
 
@@ -211,25 +176,28 @@ import axios from 'axios'
 // import WorldMap from '@/components/WorldMap'
 import RateCh from '@/components/RateCh.vue'
 import NavBar from '@/components/NavBar.vue'
-
+import ModelBox from '@/components/ModelBox.vue'
 export default {
+
   components: {
     RateCh,
     // WorldMap,
-    NavBar
+    NavBar,
+    ModelBox
 
   },
 
   data () {
     return {
       mai: false,
-      showModal: false,
+
       nowTime: '',
-      num: 5000,
+
       coinData: [],
       kData: [],
       mapData: [],
       state: '交易中',
+
       enableRowStyle: true,
       capData: {
         openToday: '-',
@@ -308,27 +276,7 @@ export default {
         { symbol: 'USDCHF', chinese_name: '美元/瑞士法郎' },
         { symbol: 'USDJPY', chinese_name: '美元/日元' }
       ],
-      form: {
-        name: ''
-
-      },
-      options: [{
-        value: 'USDJPY',
-        label: 'USDJPY'
-      }, {
-        value: 'USDCHF',
-        label: 'USDCHF'
-      }, {
-        value: 'USDCAD',
-        label: 'USDCAD'
-      }, {
-        value: 'GBPUSD',
-        label: 'GBPUSD'
-      }, {
-        value: 'EURUSD',
-        label: 'EURUSD'
-      }],
-      value: ''
+      show: false
 
     }
   },
@@ -350,16 +298,7 @@ export default {
     }
   },
   methods: {
-    changeMai () {
-      this.mai = true
-      sessionStorage.setItem('mai', JSON.stringify(this.mai))
-    },
-    openModal () {
-      this.showModal = true
-    },
-    closeModal () {
-      this.showModal = false
-    },
+
     submitForm () {
       // 处理提交逻辑
       this.$message({
@@ -410,7 +349,12 @@ export default {
       this.panUrl = row.symbols
       this.getCap()
     },
-
+    changeModel (flag) {
+      this.show = flag
+    },
+    showModel () {
+      this.show = true
+    },
     getNowTime (time) {
       const hh = new Date(time).getHours() < 10 ? '0' + new Date(time).getHours() : new Date(time).getHours()
       const mm = new Date(time).getMinutes() < 10 ? '0' + new Date(time).getMinutes() : new Date(time).getMinutes()
@@ -485,6 +429,7 @@ export default {
   mounted () {
     this.getTable()
     this.getCoin()
+
     this.mai = JSON.parse(sessionStorage.getItem('mai'))
   },
   created () {
@@ -622,51 +567,7 @@ export default {
                 .two{
                     margin-top:0.02rem;
                     color:grey;
-                    .modal {
-                      position: fixed;
-                      z-index: 1;
-                      left: 0;
-                      top: 0;
-                      width: 100%;
-                      height: 100%;
-                      background-color: rgba(0,0,0,0.5);
-                      .modal-content {
-                        background-color: #fefefe;
-                        border-radius:0.1rem;
-                        margin: 15% auto;
-                        padding: 20px;
-                        border: 1px solid #888;
-                        width: 30%;
-                        text-align: center;
-                       background-image: linear-gradient(to bottom, #7a87a2, #01335f);
-                        .formBox{
-                          .shuru{
-                            margin-top:0.05rem;
-                            background-color: rgba(110, 199, 192, 0.408);
-                            height:0.3rem;
-                            border-radius:0.03rem;
-                          }
-                          .dibu{
-                            margin-top:0.3rem;
-                          }
-                        }
-                        h2{
-                          color:#01335f
-                        }
-                        .close {
-                            color: #aaa;
-                            float: right;
-                            font-size: 28px;
-                            font-weight: bold;
-                          }
-                          .close:hover,
-                          .close:focus {
-                            color: black;
-                            text-decoration: none;
-                            cursor: pointer;
-                          }
-                      }
-                    }
+
                 }
                 .three{
                     width:100%;

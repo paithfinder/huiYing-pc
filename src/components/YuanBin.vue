@@ -236,7 +236,7 @@ export default {
             normal: {
               show: true,
               length: 20,
-              length2: 55
+              length2: 10
             },
             emphasis: {
               show: false

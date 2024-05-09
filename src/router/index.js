@@ -7,10 +7,7 @@ const routes = [
     path: '/',
     redirect: '/PreView' // 当用户访问 / 路径时重定向到 /home
   },
-  {
-    path: '/NavBar',
-    component: (resolve) => require(['@/views/NavBar'], resolve)
-  },
+
   {
     path: '/EcoIndex',
     component: (resolve) => require(['@/views/EcoIndex'], resolve)

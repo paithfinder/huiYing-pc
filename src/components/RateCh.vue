@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
 
-    <div class="chart" ref="rate">
+    <div class="chart" ref="rate"  v-loading="loading">
         我是汇率组件
     </div>
 
@@ -26,22 +26,34 @@ export default {
       baseUrl: '/currencyExchangeCharts/getCurrencyExchangeChartsData',
       // kUrl: '/currencyExchangeCharts/getCurrencyExchangeChartsData/EURAUD/noTime/近24h',
       defaultName: 'EURAUD',
-      defaultBut: '近24h'
+      defaultBut: '近24h',
+      loading: true
     }
   },
   watch: {
     radio (newValue) {
+      this.loading = true
       this.button = newValue
       console.log(this.button)
       this.getData()
-      this.updateChart()
+
+      this.rawData = []
+      this.categoryData = []
+      this.values = []
+      this.volumes = []
     },
     selectedSymbol (newValue) {
+      this.loading = true
       this.name = newValue
       console.log(this.name)
       this.getData()
-      this.updateChart()
+
+      this.rawData = []
+      this.categoryData = []
+      this.values = []
+      this.volumes = []
     }
+
   },
   computed: {
 
@@ -116,27 +128,32 @@ export default {
         // ...（这里填写你的ECharts配置）
       })
     },
-    async getData () {
-      try {
-        const res = await axios.get(this.baseUrl + '/' + this.name + '/' + this.button, {
-          headers: {
-            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+    getData () {
+      axios.get(this.baseUrl + '/' + this.name + '/' + this.button, {
+        headers: {
+          Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+        }
+      })
+        .then((res) => {
+          console.log(res.data)
+          if (res.data.data !== null) {
+            console.log(res.data)
+            this.rawData = res.data.data
+            this.splitData(this.rawData)
+
+            if (res.data.weekend === true) {
+              this.$emit('state', '停盘中')
+              console.log(this.state)
+            }
+            // 数据加载完成，更新图表
+            this.updateChart()
+            // 隐藏加载效果
+            this.loading = false
           }
         })
-        console.log(res.data)
-        if (res.data.data !== null) {
-          console.log(res.data)
-          this.rawData = res.data.data
-          this.splitData(this.rawData)
-
-          if (res.data.weekend === true) {
-            this.$emit('state', '停盘中')
-            console.log(this.state)
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      }
+        .catch((error) => {
+          console.log(error)
+        })
     },
     updateChart () {
       const option = {
@@ -350,6 +367,7 @@ export default {
         this.myChart.resize()
       })
     }
+
   },
   mounted () {
     this.initChart()

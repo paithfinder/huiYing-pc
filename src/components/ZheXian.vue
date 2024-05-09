@@ -85,6 +85,10 @@ export default {
         //   color: '#06a7ff'
         // }
         // ], false),
+        tooltip: {
+          trigger: 'axis',
+          confine: true
+        },
         title: {
           text: '资金变化曲线',
           left: '2%',
@@ -163,7 +167,7 @@ export default {
           symbolSize: 6,
           lineStyle: {
             normal: {
-              color: '#fff' // 线条颜色
+              color: '#f8d097' // 线条颜色
             }
           },
           label: {
@@ -178,9 +182,7 @@ export default {
             borderColor: '#fff',
             borderWidth: 3
           },
-          tooltip: {
-            show: false
-          },
+
           areaStyle: {
             // normal: {
             //   color: this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{

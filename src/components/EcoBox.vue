@@ -14,6 +14,7 @@
 <script>
 export default {
   props: ['name', 'duotou', 'kongtou', 'imgUrl'],
+
   mounted () {
     // console.log(this.show)
     this.initChart()

@@ -10,7 +10,7 @@
         <!-- 头像 -->
         <div class="touxiang">
             <img :src=path alt="">
-            <div style="transform: translate(0.3rem,0.71rem);font-size:0.07rem;">{{ name }}</div>
+            <div style="font-size:0.07rem;position:absolute;top:95%;left:50%;transform: translate(-50%,-50%);font-weight: bold;color:#092e6f">{{ name }}</div>
         </div>
         <!-- 文本 -->
         <div class="text">
@@ -631,6 +631,10 @@ export default {
 
                 width:85%;
                 // background-color: #323a5e;
+                .msg{
+                  width:100%;
+                  background-color:#092e6f;
+                }
                 .zhu{
                     .zhe{
                     width:45%;
@@ -654,6 +658,7 @@ export default {
                 .liu{
                     margin-top:0.2rem;
                     width:95%;
+                    margin:0 auto;
                     ul{
                         list-style-type: none;
                         padding:0;

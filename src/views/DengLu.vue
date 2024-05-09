@@ -42,8 +42,8 @@
                 <div class="btn" @click="goHome">确定</div>
             </div>
             <div class="msg">
-                <div style="cursor: pointer;color:#abc1ef">游客登录</div>
-                <div>没有账号？<a href="#" @click="goZhu">点击注册</a></div>
+
+                <div style="margin:0 auto">没有账号？<a href="#" @click="goZhu">点击注册</a></div>
 
             </div>
 
@@ -85,7 +85,9 @@ export default {
   methods: {
     changeTi () {
       if (this.radio === '') {
-        this.$message.error('选择后才能进入下一题哦')
+        this.$message.error('选择后才能进入下一题哦', {
+          duration: 1000 // 设置显示时间为1秒
+        })
       } else {
         if (this.nowTi < 4) {
           this.nowTi += 1
@@ -111,7 +113,9 @@ export default {
     },
     notice () {
       if (this.radio === '') {
-        this.$message.error('选择后才能进入下一题哦')
+        this.$message.error('选择后才能进入下一题哦', {
+          duration: 1000 // 设置显示时间为1秒
+        })
       } else {
         this.$alert(this.type, '根据测试结果，你可能是', {
           confirmButtonText: '平台已为您优化推荐模式，点击进入首页',
@@ -149,7 +153,8 @@ export default {
           if (response.success === true) {
             that.$message({
               message: '登录成功！',
-              type: 'success'
+              type: 'success',
+              duration: 1000 // 设置显示时间为1秒
             })
             that.$store.commit('changeToken', response.token)
             if (response.typeDTO) {

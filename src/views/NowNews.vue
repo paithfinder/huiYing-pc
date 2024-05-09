@@ -57,7 +57,7 @@
       <div style="display:flex;align-items: center">
 
         <!-- 图片 -->
-        <img :src="scope.row.src" alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
+        <img :src="scope.row.src ? scope.row.src : '/static/img/news/各个国家的图片.无.png'"  alt="图片" style="width: 0.1rem; height: 0.1rem;margin-right:0.05rem">
               <!-- 数据值 -->
              <div :style="{ color: scope.row.star >= 3 ? 'red' : '' }">
        {{ scope.row.dataIn }}

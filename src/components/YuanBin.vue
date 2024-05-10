@@ -3,7 +3,7 @@
     <div class="chart" ref="y">
 
     </div>
-    <div style="color:#fff;font-weight: bold;text-align: center;transform: translateY(-0.75rem);" v-if="noYuan">还未进行过交易,暂无交易品种数据</div>
+    <div style="color:#fff;font-weight: bold;text-align: center;transform: translateY(-0.75rem);" v-if="noYuan">尚未完成过交易,暂无交易品种数据</div>
   </div>
 </template>
 
@@ -29,6 +29,7 @@ export default {
     newUrl2 (newValue) {
       this.url = newValue
       this.getData()
+      this.noYuan = false
     }
   },
   computed: {
@@ -59,6 +60,7 @@ export default {
           console.log('1')
           this.names = res.data.data.map(item => item.name)
           this.data = res.data.data
+          this.noYuan = false
         } else {
           this.names = []
           this.data = []
@@ -191,7 +193,7 @@ export default {
           }]
         }, {
           type: 'pie',
-          radius: ['90%', '95%'],
+          radius: ['80%', '85%'],
           hoverAnimation: false,
           labelLine: {
             normal: {
@@ -216,7 +218,7 @@ export default {
         }, {
           stack: 'a',
           type: 'pie',
-          radius: ['20%', '80%'],
+          radius: ['20%', '60%'],
           roseType: 'area',
           zlevel: 10,
           label: {

@@ -500,32 +500,21 @@ export default {
       this.bang = false
       this.msg = false
       this.zhu = true
-      sessionStorage.setItem('bang', JSON.stringify(this.bang))
-      sessionStorage.setItem('msg', JSON.stringify(this.msg))
-      sessionStorage.setItem('zhu', JSON.stringify(this.zhu))
     },
     showBang () {
       this.zhu = false
       this.msg = false
       this.bang = true
-      sessionStorage.setItem('bang', JSON.stringify(this.bang))
-      sessionStorage.setItem('msg', JSON.stringify(this.msg))
-      sessionStorage.setItem('zhu', JSON.stringify(this.zhu))
     },
     showMsg () {
       this.zhu = false
       this.bang = false
       this.msg = true
-      sessionStorage.setItem('bang', JSON.stringify(this.bang))
-      sessionStorage.setItem('msg', JSON.stringify(this.msg))
-      sessionStorage.setItem('zhu', JSON.stringify(this.zhu))
     },
     handleClick (row) {
       console.log(row.name)
       this.$store.commit('changeSelectedName', row.name)
-      sessionStorage.setItem('bang', JSON.stringify(this.bang))
-      sessionStorage.setItem('msg', JSON.stringify(this.msg))
-      sessionStorage.setItem('zhu', JSON.stringify(this.zhu))
+
       this.$router.push('/PaiHang')
     },
     openQues () {
@@ -542,10 +531,6 @@ export default {
     }
   },
   mounted () {
-    // 从sessionStorage中获取数据，并将其解析为JSON格式
-    this.bang = JSON.parse(sessionStorage.getItem('bang'))
-    this.msg = JSON.parse(sessionStorage.getItem('msg'))
-    this.zhu = JSON.parse(sessionStorage.getItem('zhu'))
     this.getData()
     this.getable()
     this.getPai()

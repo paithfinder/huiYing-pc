@@ -2,7 +2,7 @@
 <template>
   <div id="app">
 
-      <draggable-box @click="showModel"></draggable-box>
+      <draggable-box @click="showModel" v-if="isHome"></draggable-box>
       <ModelBox :show="show" @changeModel="changeModel"></ModelBox>
       <router-view />
     </div>
@@ -11,6 +11,7 @@
 <script>
 import DraggableBox from './components/DraggableBox.vue'
 import ModelBox from './components/ModelBox.vue'
+import router from './router' // 确保引入了您的 router 实例
 // 入口组件
 export default {
   name: 'App',
@@ -20,7 +21,8 @@ export default {
   },
   data () {
     return {
-      show: false
+      show: false,
+      isHome: false
     }
   },
   created () {
@@ -40,6 +42,17 @@ export default {
     window.addEventListener('beforeunload', () => {
       sessionStorage.setItem('store', JSON.stringify(this.$store.state))
     })
+    router.beforeEach((to, from, next) => {
+      // 检查即将进入的路由名称或路径
+      if (to.path === '/' || to.path === '/Preview' || to.path === '/DengLu' || to.path === '/ZhuChe') {
+        // 如果是首页，则显示 DraggableBox
+        this.isHome = false
+      } else {
+        // 如果不是首页，则隐藏 DraggableBox
+        this.isHome = true
+      }
+      next() // 确保要调用 next()
+    })
   },
   methods: {
     changeModel (flag) {
@@ -48,6 +61,8 @@ export default {
     showModel () {
       this.show = true
     }
+
   }
+
 }
 </script>

@@ -4,7 +4,7 @@
         <source src="static/img/preview/back.mp4" type="video/mp4">
     </video>
     <img src="static/img/preview/logo透明.png" alt="" class="logo">
-    <h1 class="title" >欢迎使用<span>汇影镜像交易分析应用平台</span></h1>
+    <h1 class="title" >欢迎使用<span>汇影镜像大数据应用平台</span></h1>
     <div class="descri" style="font-family: 楷体;">
       本平台依托大数据分析<br/><br/>
       基于真实的汇率交易数据和外汇实时信息<br/><br/>

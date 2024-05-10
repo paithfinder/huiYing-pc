@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <div class="chart" ref="pro">
+    <div class="chart" ref="pro"  v-loading="loading">
         我是月盈利组件
     </div>
   </div>
@@ -14,6 +14,7 @@ export default {
     return {
     // 获取的请求数据
       proData: [],
+      loading: true,
       t: '2024年',
       baseUrl: '/winRate/getWinProfit/',
       myChart: null,
@@ -104,6 +105,7 @@ export default {
           // 使用 Vue.nextTick 来确保 DOM 更新完成后调用 updateChart
           this.$nextTick(() => {
             this.updateChart()
+            this.loading = false
           })
         }
       } catch (error) {

@@ -46,7 +46,7 @@
                                       <el-button @click="type1" type="danger" style="width:40%">卖出</el-button>
                                       <el-button @click="type2" type="primary" style="width:40%">买入</el-button>
                                     </div>
-                                      <el-button type="success" style="width:100%;margin-top:0.1rem" v-if="mai">平仓</el-button>
+
                                   </div>
                                 </div>
                               </div>
@@ -122,25 +122,25 @@
                                             <el-table-column
                                               prop="type"
                                               label="Type"
-                                              width="80"
+                                              width="85"
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="money"
                                               label="Volume"
-                                              width="80"
+                                              width="85"
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="transaction"
                                               label="Symbol"
-                                              width="80"
+                                              width="85"
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="profit"
                                               label="profit"
-                                              width="80"
+                                              width="85"
                                               align="center">
                                             </el-table-column>
 
@@ -261,6 +261,12 @@ export default {
           console.log(res.data.data)
           console.log('正在交易')
           this.weiData = res.data.data
+            .sort((a, b) => {
+              // 注意：这里使用字符串比较，所以不需要转换为日期对象
+              return b.time.localeCompare(a.time)
+            })
+        } else {
+          this.weiData = []
         }
       } catch (error) {
         console.log(error)
@@ -273,11 +279,16 @@ export default {
             Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
           }
         })
-
+        console.log(res)
         if (res.data.data !== null) {
           console.log(res.data.data)
           console.log('已结束')
-          this.yiData = res.data.data
+          this.yiData = res.data.data.sort((a, b) => {
+            // 注意：这里使用字符串比较，所以不需要转换为日期对象
+            return b.time.localeCompare(a.time)
+          })
+        } else {
+          this.yiData = []
         }
       } catch (error) {
         console.log(error)
@@ -290,9 +301,13 @@ export default {
             Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
           }
         })
-        if (res.data !== null) {
-          console.log(res.data)
-          console.log('结束')
+
+        if (res.data.success === false) {
+          this.$message({
+            message: res.data.errorMsg,
+            type: 'error',
+            duration: 1000 // 设置显示时间为1秒
+          })
         }
       } catch (error) {
         console.log(error)
@@ -308,8 +323,9 @@ export default {
         type: 'success',
         duration: 1000 // 设置显示时间为1秒
       })
-      this.istrade = false
-      this.isDing = true
+
+      this.getYi()
+      this.getHaving()
     },
     type2 () {
       this.mai = true
@@ -321,12 +337,15 @@ export default {
         type: 'success',
         duration: 1000 // 设置显示时间为1秒
       })
-      this.istrade = false
-      this.isDing = true
+
+      this.getYi()
+      this.getHaving()
     },
     showDing () {
       this.istrade = false
       this.isDing = true
+      this.getYi()
+      this.getHaving()
     },
     showTrade () {
       this.istrade = true

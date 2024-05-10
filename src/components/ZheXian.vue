@@ -3,7 +3,7 @@
     <div class="chart" ref="zhe"  >
 
     </div>
-    <div style="color:#fff;font-weight: bold;text-align: center;transform: translateY(-0.75rem);" v-if="noData">还未进行过交易,暂无资金曲线数据</div>
+    <div style="color:#fff;font-weight: bold;text-align: center;transform: translateY(-0.75rem);" v-if="noData">尚未完成过交易,暂无资金曲线数据</div>
   </div>
 </template>
 
@@ -38,6 +38,7 @@ export default {
   watch: {
     newUrl (newValue) {
       this.url = newValue
+      this.noData = false
       this.getData()
     }
   },
@@ -59,6 +60,7 @@ export default {
           console.log(res.data.data)
           this.time = res.data.data.time
           this.profit = res.data.data.profit
+          this.noData = false
         } else {
           this.time = []
           this.profit = []
@@ -100,8 +102,8 @@ export default {
         },
         grid: {
           top: '30%',
-          left: '20%',
-          right: '10%',
+          left: '15%',
+          right: '5%',
           bottom: '15%',
           containLabel: true
         },
@@ -111,7 +113,9 @@ export default {
           data: this.time,
           axisLabel: {
             margin: 30,
-            color: '#ffffff63'
+            color: '#ffffff63',
+            fontSize: 10
+
           },
           axisLine: {
             show: false
@@ -135,7 +139,8 @@ export default {
           position: 'right',
           axisLabel: {
             margin: 30,
-            color: '#fff'
+            color: '#fff',
+            fontSize: 10
           },
 
           axisTick: {
@@ -172,9 +177,10 @@ export default {
           },
           label: {
             show: true,
-            position: 'top',
+            position: 'bottom',
             textStyle: {
-              color: '#fff'
+              color: '#fff',
+              fontSize: 9
             }
           },
           itemStyle: {

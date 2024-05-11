@@ -5,14 +5,17 @@
                                 <div style="display:flex;justify-content: space-between;align-items: center;">
                                 <span style="font-size:0.08rem;color:red;font-weight: bold;background-color: #fff;padding:0.02rem;border-radius:0.03rem;cursor:pointer;" @click="showDing">
                                    <img src="/static/img/查看.png" alt="" style="width:0.05rem;height:0.05rem;transform:scale(2);padding:0 0.03rem;">
-                                  查看订单
+                                    <span>查看订单</span>
+
                                 </span>
-                                <span class="close" @click="closeModal">&times;</span>
+
+                                <span class="close" @click="closeModal" style="margin-left:0.06rem;">&times;</span>
                               </div>
 
-                              <div style="display:flex;width:100%">
+                              <div style="width:100%">
 
                                 <h3 style="color:#edf1f9;margin:0 auto">模拟交易</h3>
+                                <div style="color:red;font-size:0.08rem;font-weight: bold;margin-top:0.02rem" v-if="isWeek">(停盘中,交易截止)</div>
                               </div>
                               <div class="formBox" >
                                   <!-- 交易量 -->
@@ -245,10 +248,27 @@ export default {
         value: 'EURUSD',
         label: 'EURUSD'
       }],
-      selectId: ''
+      selectId: '',
+      isWeek: false
     }
   },
   methods: {
+    isWeekend () {
+      // 获取当前日期
+      const now = new Date()
+
+      // 获取当前星期几（0 表示周日，1 表示周一，依此类推）
+      const dayOfWeek = now.getDay()
+
+      // 判断是否是周末
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        // 周末的操作
+        this.isWeek = true
+      } else {
+        // 工作日的操作
+        this.isWeek = false
+      }
+    },
     async getHaving () {
       try {
         const res = await axios.get('user/ordersTradingWithOne', {
@@ -301,7 +321,8 @@ export default {
             Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
           }
         })
-
+        this.getYi()
+        this.getHaving()
         if (res.data.success === false) {
           this.$message({
             message: res.data.errorMsg,
@@ -357,7 +378,7 @@ export default {
         money: this.num,
         heigh: this.form.ying,
         low: this.form.sun,
-        transaction: 'USDCHF'
+        transaction: this.value
       }, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
@@ -384,6 +405,11 @@ export default {
       this.overTrade()
       this.getHaving()
       this.getYi()
+    }
+  },
+  watch: {
+    value (newValue) {
+      console.log(newValue)
     }
   },
   mounted () {

@@ -57,7 +57,7 @@ export default {
         })
         if (res.data.data.length !== 0) {
           console.log(res.data)
-          console.log('1')
+          console.log('123')
           this.names = res.data.data.map(item => item.name)
           this.data = res.data.data
           this.noYuan = false

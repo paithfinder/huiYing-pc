@@ -74,7 +74,20 @@
                     </el-dropdown>
                     <span style="color:#00ffff;padding:0.04rem" v-if="double">{{ $store.state.name[0] }} vs {{ $store.state.name[1] }}</span>
                   <span style="color:white;font-size: 0.09rem;font-weight:bold;">出手概率</span>
-                  <el-tooltip class="item" effect="light" content="实时预测信号源此时刻会出手(交易)的概率" placement="right">
+                  <el-tooltip class="item" effect="light"
+                  placement="right">
+                  <div slot="content">
+                      <p>实时预测信号源此时刻会出手(交易)的概率。</p>
+                      <p>每一个信号源只对应一个币种，八个信号源分别对应的币种为：</p>
+                      <p>Michaela Kreindl---EURAUD</p>
+                      <p>Thien Long Do---EURUSD</p>
+                      <p>Sarowar Jahan---GBPCHF</p>
+                      <p>Alexander Pavlenko---GBPJPY</p>
+                      <p>Tho Minh Cao---USDCAD</p>
+                      <p>Anteno Harpa---USDCHF</p>
+                      <p>Ady Suyoko---USDJPY</p>
+
+                    </div>
                    <i class="el-icon-question" style="color:#00bed0;transform: scale(1);transform:translate(20%,10%)"></i>
             </el-tooltip>
                   <div class="time" style="margin:0;width:1.2rem;transform: translate(2.4rem,-0.11rem);">最近更新时间:{{ gengxin }}</div>

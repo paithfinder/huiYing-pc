@@ -159,7 +159,7 @@
                                     </div>
                                     <div>{{ item.time }}</div>
                                     <div style="display: flex;align-items: center;">
-                                        <img :src="path" alt="" style="width:0.2rem;height:0.2rem;background-color: #fff;border-radius: 0.02rem;">
+                                        <img :src="item.path" alt="" style="width:0.2rem;height:0.2rem;background-color: #fff;border-radius: 0.02rem;">
                                         <div style="margin-left:0.03rem">{{ item.name }}</div>
                                     </div>
                                 </div>

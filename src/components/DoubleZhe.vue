@@ -72,6 +72,8 @@ export default {
           console.log(res.data)
           console.log(res.data.data)
           this.value2 = res.data.data.data.map(item => item.value)
+          console.log(this.value2)
+          console.log('折线图')
           this.$emit('pro2', res.data.data.data[9].value)
         }
       } catch (error) {
@@ -92,16 +94,16 @@ export default {
         legend: {
           data: [this.$store.state.name[0], this.$store.state.name[1]],
           top: '0%',
-          orient: 'vertical', // 设置图例的排列方向为竖直
-          left: '3%',
+
+          left: '35%',
           textStyle: { // 设置legend的字体颜色
             color: '#fff',
             fontSize: 8
           }
         },
         grid: {
-          top: '10%',
-          left: '20%',
+          top: '20%',
+          left: '5%',
           right: '5%',
           bottom: '0%',
           containLabel: true

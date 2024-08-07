@@ -176,7 +176,7 @@ export default {
             }
           },
           label: {
-            show: true,
+            show: false,
             position: 'bottom',
             textStyle: {
               color: '#fff',

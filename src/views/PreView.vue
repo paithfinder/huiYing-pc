@@ -6,10 +6,10 @@
     <img src="static/img/preview/logo透明.png" alt="" class="logo">
     <h1 class="title" >欢迎使用<span>汇影镜像大数据应用平台</span></h1>
     <div class="descri" style="font-family: 楷体;">
-      本平台依托大数据分析<br/><br/>
-      基于真实的汇率交易数据和外汇实时信息<br/><br/>
-      为用户提供专业的交易参考服务<br/><br/>
-      使其能够从中受益并做出更明智的交易决策<br/>
+      本平台依托机器学习技术<br/><br/>
+      基于真实的外汇实时数据和交易历史记录<br/><br/>
+      训练模型来拟合信号源的交易行为<br/><br/>
+      实时预测信号源的出手概率<br/>
     </div>
     <div class="enter" @click="show=true">
       <img src="static/img/preview/next.png" alt="">
@@ -27,7 +27,8 @@ export default {
     return {
       show: false,
       countdown: 6,
-      canConfirm: false
+      canConfirm: false,
+      timer: null
 
     }
   },
@@ -42,40 +43,53 @@ export default {
       <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果您有意参与外汇实盘交易，我们建议您联系各大银行或其他合法金融机构，以获取更具体的交易途径和服务信息。这些机构通常能够提供专业的交易平台、市场分析工具以及客户支持服务，为您的交易之旅保驾护航。
       <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在探索外汇实盘交易的同时，请务必重视风险管理，了解外汇市场的运作机制，并根据自身情况制定合适的投资策略。记住，投资有风险，交易需谨慎。
       </div>, '声明', {
-        confirmButtonText: '我已阅读且知晓,确认进入',
+        confirmButtonText: '请仔细阅读5s',
         showCancelButton: false,
         type: 'warning',
         center: true,
         customClass: 'custom-confirm-dialog',
         beforeClose: (action, instance, done) => {
-          if (action === 'confirm' && !this.canConfirm) {
+          const confirmButton = document.querySelector('.el-message-box__btns .el-button--primary')
+          if (confirmButton.textContent === '请仔细阅读5s') {
             instance.confirmButtonLoading = true
-            done(false) // Prevent closing
-          } else {
+            done(false)
+            this.$message.error('5s后才可以进入哦!', {
+              duration: 1000 // 设置显示时间为1秒
+            })
+            this.canConfirm = false
+            confirmButton.disabled = true
+          } else if (action === 'confirm' && this.canConfirm) {
+            // 跳转到登录页面
+            this.$router.push('/DengLu')
             done()
+          } else {
+            done(false)
           }
         }
       }).then(() => {
-        this.$router.push('/DengLu')
+        // Start the countdown
+
       }).catch(() => {
         // Cancelled or timer not finished
-      })
 
-      // Start the countdown
+      })
       this.startCountdown()
     },
     startCountdown () {
+      if (this.timer != null) {
+        clearInterval(this.timer)
+      }
       this.canConfirm = false
       this.countdown = 6
-      const timer = setInterval(() => {
+      this.timer = setInterval(() => {
         this.countdown -= 1
         if (this.countdown <= 0) {
-          clearInterval(timer)
+          clearInterval(this.timer)
           this.canConfirm = true
           // Enable the confirm button and change the text
           this.$nextTick(() => {
             const confirmButton = document.querySelector('.el-message-box__btns .el-button--primary')
-            if (confirmButton) {
+            if (this.canConfirm) {
               confirmButton.disabled = false
               confirmButton.textContent = '我已阅读且知晓,确认进入'
             }

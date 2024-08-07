@@ -34,7 +34,7 @@
   </el-button-group> -->
     </div>
     <div>
-      <img src="/static/img/问卷/插图.png" alt="" style="width:6.5rem;height:4rem;transform: translate(-2.5rem,-2rem);">
+      <img src="/static/img/问卷/插图.png" alt="" style="width:5rem;height:3rem;transform: translate(-1.9rem,-2rem);">
     </div>
     <div>
       <img src="/static/img/问卷/插图2.png" alt="" style="width:2.5rem;height:2.5rem;transform:translate(7.6rem,-6.8rem)">
@@ -254,6 +254,7 @@ export default {
             width:100%;
             display:flex;
             justify-content: space-between;
+
         }
     }
 

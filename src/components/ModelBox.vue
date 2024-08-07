@@ -53,7 +53,7 @@
                                   </div>
                                 </div>
                               </div>
-                              <div class="dingdan" v-if="isDing">
+                              <div class="dingdan" v-if="isDing" >
                                         <div style="display:flex;justify-content: space-between;align-items: center;">
                                           <span style="font-size:0.08rem;color:red;font-weight: bold;background-color: #fff;padding:0.02rem;border-radius:0.03rem;cursor:pointer;" @click="showTrade">
                                             <img src="/static/img/返回.png" alt="" style="width:0.05rem;height:0.05rem;transform:scale(2);padding:0 0.03rem;">
@@ -69,32 +69,32 @@
                                         <div style="color:#fff;text-align: left;margin-top:0.03rem;font-size:0.08rem;font-weight: bold">正在进行交易的订单：</div>
                                         <el-table
                                             :data="weiData"
-
+                                            v-loading="weiLoading"
                                             max-height="140"
                                             style="width: 100%;font-size:0.06rem;margin-top:0.03rem">
                                             <el-table-column
                                               fixed
                                               prop="time"
                                               label="Time"
-                                              width="120"
+
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="type"
                                               label="Type"
-                                              width="80"
+
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="money"
                                               label="Volume"
-                                              width="80"
+
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="transaction"
                                               label="Symbol"
-                                              width="80"
+
                                               align="center">
                                             </el-table-column>
 
@@ -112,38 +112,38 @@
                                          <div style="color:#fff;text-align: left;margin-top:0.15rem;font-size:0.08rem;font-weight: bold">已结束订单：</div>
                                         <el-table
                                             :data="yiData"
-
+                                            v-loading="yiLoading"
                                             max-height="150"
                                             style="width: 100%;font-size:0.06rem;margin-top:0.03rem;">
                                             <el-table-column
                                               fixed
                                               prop="time"
                                               label="Time"
-                                              width="120"
+
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="type"
                                               label="Type"
-                                              width="85"
+
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="money"
                                               label="Volume"
-                                              width="85"
+
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="transaction"
                                               label="Symbol"
-                                              width="85"
+
                                               align="center">
                                             </el-table-column>
                                             <el-table-column
                                               prop="profit"
                                               label="profit"
-                                              width="85"
+
                                               align="center">
                                             </el-table-column>
 
@@ -166,6 +166,8 @@ export default {
       isDing: false,
       type: '',
       num: 5000,
+      weiLoading: false,
+      yiLoading: false,
       mai: false,
       value: '',
       weiData: [{
@@ -280,6 +282,7 @@ export default {
         if (res.data.data !== null) {
           console.log(res.data.data)
           console.log('正在交易')
+
           this.weiData = res.data.data
             .sort((a, b) => {
               // 注意：这里使用字符串比较，所以不需要转换为日期对象
@@ -321,8 +324,13 @@ export default {
             Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
           }
         })
+
         this.getYi()
         this.getHaving()
+        this.$nextTick(function () {
+        // DOM 更新后的操作
+          this.weiLoading = false
+        })
         if (res.data.success === false) {
           this.$message({
             message: res.data.errorMsg,
@@ -373,6 +381,7 @@ export default {
       this.isDing = false
     },
     getModel () {
+      console.log(this.type)
       $http.post('/api/user/trade', {
         type: this.type,
         money: this.num,
@@ -402,9 +411,8 @@ export default {
     handleWei (row) {
       console.log(row.id)
       this.selectId = row.id
+      this.weiLoading = true
       this.overTrade()
-      this.getHaving()
-      this.getYi()
     }
   },
   watch: {
@@ -415,6 +423,7 @@ export default {
   mounted () {
     this.getHaving()
     this.getYi()
+    this.isWeekend()
   }
 }
 </script>

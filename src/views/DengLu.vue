@@ -24,9 +24,9 @@
                   </el-radio-group>
             </div>
             <div class="button">
-                  <el-button type="info" round v-show="nowTi>0 ? true:false" @click="preTi">上一题</el-button>
-                 <el-button type="primary" round @click="changeTi" :plain="true" v-show="nowTi<4 ? true :false">下一题</el-button>
-                 <el-button type="danger" round v-show="nowTi===4 ? true :false" @click="notice">查看测试结果</el-button>
+                  <el-button type="info" round v-if="nowTi>0 ? true:false" @click="preTi">上一题</el-button>
+                 <el-button type="primary" round v-if="nowTi<4 ? true :false" @click="changeTi"  >下一题</el-button>
+                 <el-button type="danger" round v-if="nowTi===4 ? true :false" @click="notice">查看测试结果</el-button>
             </div>
               <!-- <el-button-group>
     <el-button icon="el-icon-minus" @click="decrease"></el-button>
@@ -49,7 +49,7 @@
 
     </div>
     <div>
-      <img src="/static/img/问卷/插图.png" alt="" style="width:6.5rem;height:4rem;transform: translate(-2.5rem,-2rem);">
+      <img src="/static/img/问卷/插图.png" alt="" style="width:5rem;height:3rem;transform: translate(-1.9rem,-2rem);">
     </div>
     <div>
       <img src="/static/img/问卷/插图2.png" alt="" style="width:2.5rem;height:2.5rem;transform:translate(7.6rem,-6.8rem)">
@@ -273,6 +273,7 @@ export default {
             margin-top:0.3rem;
             width:100%;
             display:flex;
+
             justify-content: space-between;
         }
     }

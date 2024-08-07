@@ -4,9 +4,9 @@
         <source src="static/img/home/homebg.mp4" type="video/mp4">
     </video>
       <NavBar></NavBar>
-      <div class="eco">
+      <div class="eco" style="height:2rem">
 
-    <div class="topBox">
+    <div class="topBox" >
       <div class="title">
         <img src="/static/img/eco/图表-仪表盘.png" alt="" style="width:0.2rem;
           height:0.2rem;">

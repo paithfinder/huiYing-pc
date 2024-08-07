@@ -56,13 +56,13 @@
                         <el-table-column
                           prop="time"
                           label="Time"
-                          width="180"
+
                           align="center">
                         </el-table-column>
                         <el-table-column
                           prop="type"
                           label="Type"
-                          width="180"
+
                           align="center">
                         </el-table-column>
                         <el-table-column
@@ -91,36 +91,81 @@
               style="text-align: center;color:#fff;margin-top:0.2rem;">
                 </el-pagination>
                 </div>
+
                 <div class="bang" v-if="bang">
+                  <h3 class="textbang" style="display:flex;color:#FFF;align-items:center">{{ textBang }}排行榜
+                    <div style="margin-left:0.1rem;">
+                      <el-button type="primary" size="mini" style="display:flex;align-items: center;padding:0.02rem" @click="changeBang">切换
+                        <img src="/static/img/个人/切换 .png" alt="" style="width:0.07rem;height:0.07rem;">
+                      </el-button>
+                    </div>
+                  </h3>
                      <el-table
-                        :data="bangData"
+                        :data="zijinData"
                         border
                         style="width:100%;margin:0 auto;"
+                        v-if="isZiJin"
                         >
                         <el-table-column
                           fixed
                           prop="place"
                           label="排行"
-                          width="160"
+
                           align="center">
                         </el-table-column>
                         <el-table-column
                           prop="name"
                           label="用户名"
-                          width="300"
+
                           align="center">
                         </el-table-column>
                         <el-table-column
                           prop="fund"
                           label="资金"
-                          width="280"
+
                           align="center">
                         </el-table-column>
 
                         <el-table-column
                           fixed="right"
                           label="主页"
-                          width="160"
+
+                          align="center">
+                          <template slot-scope="scope">
+                            <el-button @click="handleClick(scope.row)" type="text" size="small">点击查看</el-button>
+                          </template>
+                        </el-table-column>
+                    </el-table>
+                     <el-table
+                        :data="shenglvData"
+                        border
+                        style="width:100%;margin:0 auto;"
+                        v-if="isShengLv"
+                        >
+                        <el-table-column
+                          fixed
+                          prop="ranking"
+                          label="排行"
+
+                          align="center">
+                        </el-table-column>
+                        <el-table-column
+                          prop="name"
+                          label="用户名"
+
+                          align="center">
+                        </el-table-column>
+                        <el-table-column
+                          prop="winRate"
+                          label="获胜率"
+
+                          align="center">
+                        </el-table-column>
+
+                        <el-table-column
+                          fixed="right"
+                          label="主页"
+
                           align="center">
                           <template slot-scope="scope">
                             <el-button @click="handleClick(scope.row)" type="text" size="small">点击查看</el-button>
@@ -149,15 +194,40 @@
                             <li v-for="(item, index) in msgTable" :key="index">
 
                                 <div class="text">{{  item.data }}</div>
+                                <br>
+                               <div class="replayArea" style="display:flex;justify-content: space-between;">
+                                 <el-input
+                                  type="textarea"
+                                  autosize
+                                  placeholder="我要回复……"
+                                  style="width:93%"
+                                  :maxlength="100"
+                                  show-word-limit
+                                  v-model="item.replayContent">
+                                </el-input>
+                                <el-button size="mini" type="primary" @click="addReplay(item.id,item.replayContent)">确定</el-button>
+                               </div>
+                               <template >
+                                  <ul style="display:none" ref="ulReplay">
+                                    <li v-for="(replay) in item.replayList" :key="replay.id"  class="replayText">
+                                      <div >{{ replay.name }}:{{ replay.data }}</div>
+                                      <div style="margin-top:0.02rem">{{ replay.time }}</div>
+                                    </li>
+                                  </ul>
+                               </template>
                                 <div class="flag">
                                     <div style="display:flex;align-items: center;">
                                         <div @click="changeActive(item.id)">
-                                          <img :src=item.unLiked alt="" style="width:0.2rem;height:0.2rem">
+                                          <img :src="item.flag===true ? '/static/img/个人/已赞.png':'/static/img/个人/未赞.png'" alt="" style="width:0.2rem;height:0.2rem">
 
                                         </div>
                                         <div style="margin-left:0.03rem;">{{ item.support }}</div>
                                     </div>
                                     <div>{{ item.time }}</div>
+                                    <div  @click="changeReplay($event,item.replayList,index)" style="display:flex;align-items: center;cursor:pointer" v-if="item.replays===0 ? false :true">
+                                      <span  >展开{{item.replayList.length }}条回复</span>
+                                      <img :src="replayImg" alt="" style="width:0.1rem;height:0.1rem;margin-left:0.02rem;">
+                                    </div>
                                     <div style="display: flex;align-items: center;">
                                         <img :src="item.path" alt="" style="width:0.2rem;height:0.2rem;background-color: #fff;border-radius: 0.02rem;">
                                         <div style="margin-left:0.03rem">{{ item.name }}</div>
@@ -171,14 +241,12 @@
                     <div v-if="isMy">
                       <div class="liu">
                         <ul>
-
                             <li v-for="(item, index) in myTable" :key="index">
-
                                 <div class="text">{{  item.data }}</div>
                                 <div class="flag">
                                     <div style="display:flex;align-items: center;">
-                                        <div @click="changeActive(item.id)">
-                                          <img :src=item.unLiked alt="" style="width:0.2rem;height:0.2rem">
+                                        <div @click="changeActiveMy(item.id)">
+                                          <img :src="item.flag===true ? '/static/img/个人/已赞.png':'/static/img/个人/未赞.png'" alt="" style="width:0.2rem;height:0.2rem">
 
                                         </div>
                                         <div style="margin-left:0.03rem;">{{ item.support }}</div>
@@ -195,11 +263,8 @@
                     </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 </div>
 </template>
@@ -222,14 +287,20 @@ export default {
       winRank: '',
       type: '',
       path: '',
+
       activeId: '',
-      activeFlag: '/static/img/个人/未赞.png',
+      textBang: '资金',
+      replayImg: '/static/img/个人/展开.png',
       likeType: '',
+      isZiJin: true,
+      isShengLv: false,
       unLikeType: '',
       msgData: '',
       zhu: true,
       bang: false,
       msg: false,
+      unfold: true,
+      fold: false,
       form: {
         name: '',
         region: '',
@@ -271,7 +342,8 @@ export default {
         Symbol: 'EURUSD',
         Profit: '734'
       }],
-      bangData: [{
+      replayData: [{}],
+      zijinData: [{
         date: '1',
         name: '王小虎',
         province: '200320',
@@ -296,12 +368,15 @@ export default {
         city: '普陀区'
 
       }],
+      bangData: [{}],
       msgTable: [{}],
       myTable: [{}],
       wei: true,
       yi: false,
       isAll: true,
-      isMy: false
+      isMy: false,
+      replayAllUrl: '',
+      showReplay: false
     }
   },
   components: {
@@ -363,7 +438,24 @@ export default {
         if (res.data.data !== null) {
           console.log(res.data.data)
           console.log(5)
-          this.bangData = res.data.data
+          this.zijinData = res.data.data
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getPai2 () {
+      try {
+        const res = await axios.get('user/rankingWithWinRate', {
+          headers: {
+            Authourization: this.$store.state.token // 确保使用正确的头字段名，并添加Bearer前缀
+          }
+        })
+
+        if (res.data.data !== null) {
+          console.log(res.data.data)
+          console.log(888)
+          this.shenglvData = res.data.data
         }
       } catch (error) {
         console.log(error)
@@ -379,10 +471,10 @@ export default {
 
         if (res.data.data !== null) {
           console.log(res.data.data)
-          console.log(7)
-          this.msgTable = res.data.data
-          this.likeType = res.data.data.liked
-          this.unLikeType = res.data.data.unLikeType
+          console.log(777)
+          this.msgTable = res.data.data.map(obj => {
+            return { ...obj, replayContent: '' }
+          })
         }
       } catch (error) {
         console.log(error)
@@ -402,6 +494,30 @@ export default {
 
         // 处理成功情况
         console.log(response)
+        this.getAllMsg()
+      } catch (error) {
+        // 处理错误情况
+        console.error(error)
+      }
+    },
+    async addReplay (id, replayContent) {
+      // 发送POST请求
+
+      try {
+        const response = await $http.post('/api/user/addReplayToMessage', {
+          replay: replayContent,
+          id: id
+        }, {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8', // 设置Content-Type为application/json
+            Authourization: this.$store.state.token
+          }
+        })
+
+        // 处理成功情况
+        console.log(response)
+        console.log('新增回复')
+        this.getAllMsg()
       } catch (error) {
         // 处理错误情况
         console.error(error)
@@ -452,22 +568,51 @@ export default {
         console.log(error)
       }
     },
+
     // 点击按钮切换页面
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage // 每次点击分页按钮，当前页发生变化
       // console.log(this.currentPage);
     },
+    changeBang () {
+      if (this.textBang === '资金') {
+        this.textBang = '胜率'
+      } else {
+        this.textBang = '资金'
+      }
+      this.isZiJin = !this.isZiJin
+      this.isShengLv = !this.isShengLv
+    },
+    changeReplay (event, replayList, index) {
+      const clickDiv = event.currentTarget // 获取绑定事件的整个 <div> 元素
+      const clickImg = clickDiv.querySelector('img') // 获取 <div> 元素下的图片元素
+      const clickText = clickDiv.querySelector('span') // 获取 <div> 元素下的文本元素
+
+      const targetSrc = clickImg.getAttribute('src')
+      const newSrc = targetSrc === 'static/img/个人/展开.png' ? 'static/img/个人/收起.png' : 'static/img/个人/展开.png'
+      clickImg.setAttribute('src', newSrc) // 更新图片的 src 属性
+
+      const text = clickText.innerHTML
+      clickText.innerHTML = text !== '收起' ? '收起' : `展开${replayList.length}条回复`
+      this.replayAllUrl = 'user/getAllReplayById/' + index
+      if (text === `展开${replayList.length}条回复`) {
+        console.log(this.$refs.ulReplay)
+        console.log(index)
+        this.$refs.ulReplay[index].style.display = 'block'
+      }
+      if (text === '收起') {
+        this.$refs.ulReplay[index].style.display = 'none'
+      }
+    },
     onSubmit () {
       console.log('submit!')
       console.log(this.form.desc)
       this.msgData = this.form.desc
-      this.getAddMsg()
 
       const newMsg = {
         id: this.msgData[0].id + 1,
         time: this.$store.state.lauchTime,
-        liked: '/static/img/个人/已赞.png',
-        unLiked: '/static/img/个人/未赞.png',
+        flag: false,
         data: this.form.desc,
         path: this.path,
         support: 0,
@@ -476,21 +621,41 @@ export default {
       }
       this.msgTable.unshift(newMsg)
       this.form.desc = ''
+      this.getAddMsg()
     },
     changeActive (index) {
       console.log(index)
       this.activeId = index
       // 找到对应 id 的项目并更新它的 unLiked 属性
       const item = this.msgTable.find(item => item.id === index)
-      if (item.unLiked === '/static/img/个人/未赞.png') {
+      if (item.flag === false) {
       // 如果当前是未赞状态，改为已赞，并增加 support
-        this.$set(item, 'unLiked', '/static/img/个人/已赞.png')
+        this.$set(item, 'flag', true)
         this.$set(item, 'support', item.support + 1)
 
         this.thumbUp()
       } else {
       // 如果当前是已赞状态，改为未赞，并减少 support
-        this.$set(item, 'unLiked', '/static/img/个人/未赞.png')
+        this.$set(item, 'flag', false)
+        this.$set(item, 'support', item.support - 1)
+
+        this.thumbDown()
+      }
+    },
+    changeActiveMy (index) {
+      console.log(index)
+      this.activeId = index
+      // 找到对应 id 的项目并更新它的 unLiked 属性
+      const item = this.myTable.find(item => item.id === index)
+      if (item.flag === false) {
+      // 如果当前是未赞状态，改为已赞，并增加 support
+        this.$set(item, 'flag', true)
+        this.$set(item, 'support', item.support + 1)
+
+        this.thumbUp()
+      } else {
+      // 如果当前是已赞状态，改为未赞，并减少 support
+        this.$set(item, 'flag', false)
         this.$set(item, 'support', item.support - 1)
 
         this.thumbDown()
@@ -534,6 +699,7 @@ export default {
     this.getData()
     this.getable()
     this.getPai()
+    this.getPai2()
     this.getAllMsg()
     this.getAddMsg()
   }
@@ -659,6 +825,19 @@ export default {
                                 justify-content: space-between;
                                 align-items: center;
                                 margin-top:0.1rem;
+                            }
+                            .replayText{
+
+                              margin:0 auto;
+                              background-color: rgba(255, 255, 255,0.2);
+                              // padding:0.02rem;
+                              box-sizing: border-box;
+                              margin-top:0.05rem;
+                              ul{
+                                padding:0;
+                                margin:0
+                              }
+
                             }
 
                         }

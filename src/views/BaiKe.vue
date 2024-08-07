@@ -349,6 +349,7 @@
         <h3>宏观经济指标</h3>
         <h4 id="1-4-1">GDP</h4>
         <img src="/static/img/图片/GDP.jpg" alt="" style="width:2rem;height:1rem;">
+        <br>
         <span>GDP是国内生产总值（Gross Domestic Product）的缩写，是衡量一个国家或地区经济活动总量的一种指标。它代表了在一定时间内（通常是一年）一个国家或地区内所有最终商品和服务的总价值。<br>
 GDP通常被用来衡量一个国家或地区的经济规模和增长速度。它可以通过三种方法来计算：
 生产法：计算所有生产活动的总值，包括所有企业和政府机构生产的最终商品和服务的价值。
@@ -464,9 +465,12 @@ GDP的增长通常被视为经济健康和发展的重要指标之一。然而�
 趋势线的绘制方法通常是通过选择两个或多个显著的价格点，如高点或低点，然后通过将它们连接起来形成一条直线来描绘趋势。这些价格点的选择取决于分析者的偏好和市场情况。
 趋势线对交易者有重要意义，因为它们可以帮助识别价格的趋势方向，找出潜在的支撑和阻力水平，以及确定进出场时机。然而，趋势线并不是绝对的，它们可能会在市场波动中被突破或失效，因此交易者需要结合其他技术指标和分析方法来做出更准确的交易决策。</span>
         <h4 id="1-5-2">支撑位阻力位</h4>
-        <img src="/static/img/图片/支撑位阻力位.jpg" alt="" style="width:2rem;height:1rem;"><br>
-        <img src="/static/img/图片/支撑位阻力位 (2).jpg" alt="" style="width:2rem;height:1rem;"><br>
-        <img src="/static/img/图片/支撑位阻力位 (3).jpg" alt="" style="width:2rem;height:1rem;"><br>
+        <div style="display:flex;justify-content: space-evenly;">
+          <img src="/static/img/图片/支撑位阻力位.jpg" alt="" style="width:2rem;height:1rem;">
+        <img src="/static/img/图片/支撑位阻力位 (2).jpg" alt="" style="width:2rem;height:1rem;">
+        <img src="/static/img/图片/支撑位阻力位 (3).jpg" alt="" style="width:2rem;height:1rem;">
+        </div>
+        <br>
         <span>支撑位和阻力位是在技术分析中使用的概念，用于标识价格可能反弹或受阻的水平。
 支撑位（Support）：支撑位指的是价格下跌时，预计会有买盘进入市场，导致价格反弹的价格水平。在支撑位上，买家数量大于卖家数量，使得价格得到支撑并开始反弹。支撑位通常是在过去的价格走势中形成的重要低点，这些低点可能是价格反弹的起点。如果价格跌破支撑位，可能表明市场看空情绪加强，价格可能进一步下跌。
 阻力位（Resistance）：阻力位指的是价格上涨时，预计会有卖盘进入市场，导致价格受阻的价格水平。在阻力位上，卖家数量大于买家数量，使得价格受到压力并开始回落。阻力位通常是过去的价格高点形成的重要水平，这些高点可能会成为价格上涨的阻碍。如果价格突破阻力位，可能表明市场看多情绪增强，价格可能进一步上涨。
@@ -558,9 +562,12 @@ MACD的常见应用包括以下几个方面：
 柱状图（Bar Chart）：柱状图与蜡烛图类似，也能够显示开盘价、收盘价、最高价和最低价等信息，但是用不同的方式表示。柱状图使用垂直的柱形来表示价格的变动，柱形的高度表示价格区间，柱形的上下端点分别表示开盘价和收盘价。柱状图也是进行技术分析的常见工具之一。
 除了这些常见的图表模式外，还有一些其他类型的图表模式，如K 线图、点数图等，它们也在金融市场中得到广泛应用。选择合适的图表模式取决于交易者的个人偏好、分析需求以及交易策略。</span>
                     <h4 id="3-5-3">价格模式</h4>
-                    <img src="/static/img/图片/价格模式.jpg" alt="" style="width:2rem;height:1rem;"><br>
-                    <img src="/static/img/图片/价格模式 (2).jpg" alt="" style="width:2rem;height:1rem;"><br>
-                    <img src="/static/img/图片/价格模式 (3).jpg" alt="" style="width:2rem;height:1rem;"><br>
+                    <div style="display:flex;justify-content: space-evenly;">
+                      <img src="/static/img/图片/价格模式.jpg" alt="" style="width:2rem;height:1rem;">
+                    <img src="/static/img/图片/价格模式 (2).jpg" alt="" style="width:2rem;height:1rem;">
+                    <img src="/static/img/图片/价格模式 (3).jpg" alt="" style="width:2rem;height:1rem;">
+                    </div>
+                    <br>
                     <span>价格模式是指在金融市场中出现的特定价格走势形态或图案，这些模式往往可以为交易者提供有关未来价格走势的信息，并且可用于制定交易决策。价格模式通常是基于历史价格数据和市场心理形成的，常见的价格模式包括：
 头肩顶和头肩底（Head and Shoulders）：这是一种经典的价格反转模式。头肩顶模式通常出现在上涨趋势中，由一个向上的高峰（头）、两个低峰（肩）和一个向下的低峰组成，预示着价格可能会下跌。头肩底模式则相反，出现在下跌趋势中，预示着价格可能会上涨。
 双顶和双底（Double Top and Double Bottom）：双顶模式是指价格在两次达到相似的高点后下跌，预示着可能发生价格反转。双底模式则是指价格在两次达到相似的低点后上涨，预示着价格可能会反转向上。
@@ -588,8 +595,11 @@ MACD的常见应用包括以下几个方面：
 一旦进入交易，交易者需要密切监控市场，并根据市场变化进行调整。突破策略可能会产生假突破或价格回调的情况，因此灵活性和及时调整非常重要。
 突破策略在市场上常见且广泛应用，但并非没有风险。交易者需要谨慎分析和控制风险，以确保策略的有效性和盈利能力。</span>
                   <h4 id="6-2">趋势跟踪策略</h4>
-                  <img src="/static/img/图片/趋势跟踪策略.jpg" alt="" style="width:2rem;height:1rem;"><br>
-                  <img src="/static/img/图片/趋势跟踪策略 (2).jpg" alt="" style="width:2rem;height:1rem;"><br>
+                  <div style="display:flex;justify-content: space-evenly;">
+                    <img src="/static/img/图片/趋势跟踪策略.jpg" alt="" style="width:2rem;height:1rem;">
+                    <img src="/static/img/图片/趋势跟踪策略 (2).jpg" alt="" style="width:2rem;height:1rem;">
+                  </div>
+                  <br>
                   <span>趋势跟踪策略是一种技术分析方法，旨在捕捉市场中已经形成并且可能会持续的趋势。该策略基于市场趋势的持续性假设，认为价格往往会朝着同一方向持续移动一段时间。
 以下是趋势跟踪策略的一般步骤和要点：
 识别趋势：
@@ -772,9 +782,11 @@ export default {
 .wrap {
   width:100%;
   overflow: hidden;
+
   .box{
     position:sticky;
-    top:0
+    top:0;
+
   }
   .baike{
     display:flex;
@@ -801,7 +813,8 @@ export default {
     padding:0 0.5rem;
     box-sizing: border-box;
     background-color:rgba(1, 24, 69);
-    color:#fff
+    color:#fff;
+     font-family: 仿宋;
   }
   }
   // position:relative;
